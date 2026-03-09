@@ -7,27 +7,26 @@ import androidx.room.PrimaryKey;
 // @Entity indica que esta clase es la tabla "ingresos" en SQLite
 @Entity(tableName = "ingresos",
         foreignKeys = {
-                // Un ingreso pertenece a un usuario, si se borra el usuario sus ingresos se borran también
+                // Un ingreso pertenece a un usuario
                 @ForeignKey(entity = Usuario.class,
                         parentColumns = "id_usuario",
                         childColumns = "id_usuario",
-                        onDelete = ForeignKey.CASCADE)
+                        onDelete = ForeignKey.RESTRICT) //no se puede borrar un usuario con ingresos asociados
         })
 public class Ingreso {
 
     // Clave primaria, se genera automáticamente
-    @PrimaryKey(autoGenerate = true)
-    private int id_ingreso;
+    @PrimaryKey(autoGenerate = true) //instrucción para Room
+    private int id_ingreso; // id_gasto INTEGER PRIMARY KEY AUTOINCREMENT,
 
     // Columnas de la tabla ingresos
-    private String fecha;
     private double importe;
+    private String fecha; // SQLite no tiene date nativo
     private String tipoingreso;
     private String notas;
     private int id_usuario;
 
     // GETTERS Y SETTERS
-    
     public int getId_ingreso()
     { return id_ingreso; }
     public void setId_ingreso(int id_ingreso)
