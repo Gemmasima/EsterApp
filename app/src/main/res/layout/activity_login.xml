@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="32dp"
+    android:background="#FFFFFF">
+
+    <!-- Título de la app -->
+    <TextView
+        android:id="@+id/tvTitulo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Gazzola SHOP"
+        android:textSize="36sp"
+        android:textStyle="bold"
+        android:textColor="#2C3E50"
+        android:layout_marginBottom="48dp"/>
+
+    <!-- Campo nombre de usuario -->
+    <EditText
+        android:id="@+id/etUsuario"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Usuario"
+        android:inputType="text"
+        android:layout_marginBottom="16dp"
+        android:minHeight="48dp"/>
+
+    <!-- Campo contraseña, los caracteres se ocultan con textPassword -->
+    <EditText
+        android:id="@+id/etContrasena"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Contraseña"
+        android:inputType="textPassword"
+        android:layout_marginBottom="32dp"
+        android:minHeight="48dp"/>
+
+    <!-- Botón de entrar -->
+    <Button
+        android:id="@+id/btnEntrar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Entrar"/>
+
+    <!-- Mensaje de error, invisible hasta que el login falle -->
+    <TextView
+        android:id="@+id/tvError"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Usuario o contraseña incorrectos"
+        android:textColor="#E74C3C"
+        android:visibility="gone"
+        android:layout_marginTop="16dp"/>
+
+</LinearLayout>

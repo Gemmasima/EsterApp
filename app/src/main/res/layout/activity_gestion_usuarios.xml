@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="32dp">
+
+        <!-- Título de la pantalla -->
+        <TextView
+            android:id="@+id/tvTitulo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Gestión de Usuarios"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:textColor="#2C3E50"
+            android:layout_marginBottom="32dp"/>
+
+        <!-- ── CREAR / EDITAR USUARIO ── -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Crear / Editar usuario"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#2C3E50"
+            android:layout_marginBottom="8dp"/>
+
+        <!-- Campo nombre completo -->
+        <EditText
+            android:id="@+id/etNombre"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nombre completo"
+            android:inputType="textPersonName"
+            android:minHeight="48dp"
+            android:layout_marginBottom="8dp"/>
+
+        <!-- Campo nombre de usuario -->
+        <EditText
+            android:id="@+id/etUsuario"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nombre de usuario"
+            android:inputType="text"
+            android:minHeight="48dp"
+            android:layout_marginBottom="8dp"/>
+
+        <!-- Campo contraseña -->
+        <EditText
+            android:id="@+id/etContrasena"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Contraseña"
+            android:inputType="textPassword"
+            android:minHeight="48dp"
+            android:layout_marginBottom="8dp"/>
+
+        <!-- Selector de rol -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Rol"
+            android:textSize="16sp"
+            android:textColor="#2C3E50"/>
+
+        <!-- Spinner con los roles disponibles -->
+        <Spinner
+            android:id="@+id/spinnerRol"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:layout_marginBottom="16dp"/>
+
+        <!-- Botón guardar usuario nuevo o editado -->
+        <Button
+            android:id="@+id/btnGuardarUsuario"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Guardar Usuario"
+            android:textSize="18sp"
+            android:minHeight="56dp"
+            android:layout_marginBottom="8dp"/>
+
+        <!-- Mensaje de confirmación o error -->
+        <TextView
+            android:id="@+id/tvMensaje"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:layout_marginBottom="24dp"
+            android:visibility="gone"/>
+
+        <!-- ── LISTA DE USUARIOS ── -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Usuarios registrados"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#2C3E50"
+            android:layout_marginBottom="8dp"/>
+
+        <!-- ListView muestra la lista de usuarios de la base de datos -->
+        <ListView
+            android:id="@+id/listViewUsuarios"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_marginBottom="24dp"/>
+
+        <!-- Botón eliminar usuario seleccionado de la lista -->
+        <Button
+            android:id="@+id/btnEliminarUsuario"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Eliminar Usuario Seleccionado"
+            android:textSize="18sp"
+            android:minHeight="56dp"
+            android:layout_marginBottom="16dp"/>
+
+        <!-- Botón volver al menú -->
+        <Button
+            android:id="@+id/btnVolver"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Volver"
+            android:textSize="18sp"
+            android:minHeight="64dp"/>
+
+    </LinearLayout>
+</ScrollView>

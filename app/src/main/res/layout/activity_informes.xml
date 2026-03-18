@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF">
+
+    <!-- ScrollView permite hacer scroll si el contenido no cabe en pantalla -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="32dp">
+
+        <!-- Título de la pantalla -->
+        <TextView
+            android:id="@+id/tvTitulo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Informes"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:textColor="#2C3E50"
+            android:layout_marginBottom="32dp"/>
+
+        <!-- ── INFORME DIARIO ── -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Informe diario"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#2C3E50"
+            android:layout_marginBottom="8dp"/>
+
+        <EditText
+            android:id="@+id/etDia"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Fecha (ej: 2026-03-17)"
+            android:inputType="text"
+            android:minHeight="48dp"
+            android:layout_marginBottom="8dp"/>
+
+        <Button
+            android:id="@+id/btnInformeDiario"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Generar informe diario"
+            android:minHeight="56dp"
+            android:layout_marginBottom="8dp"/>
+
+        <TextView
+            android:id="@+id/tvResultadoDiario"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="#2C3E50"
+            android:visibility="gone"
+            android:layout_marginBottom="24dp"/>
+
+        <!-- ── INFORME SEMANAL ── -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Informe semanal"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#2C3E50"
+            android:layout_marginBottom="8dp"/>
+
+        <EditText
+            android:id="@+id/etSemanaDesde"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Desde (ej: 2026-03-10)"
+            android:inputType="text"
+            android:minHeight="48dp"
+            android:layout_marginBottom="8dp"/>
+
+        <EditText
+            android:id="@+id/etSemanaHasta"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Hasta (ej: 2026-03-17)"
+            android:inputType="text"
+            android:minHeight="48dp"
+            android:layout_marginBottom="8dp"/>
+
+        <Button
+            android:id="@+id/btnInformeSemanal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Generar informe semanal"
+            android:minHeight="56dp"
+            android:layout_marginBottom="8dp"/>
+
+        <TextView
+            android:id="@+id/tvResultadoSemanal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="#2C3E50"
+            android:visibility="gone"
+            android:layout_marginBottom="24dp"/>
+
+        <!-- ── INFORME MENSUAL ── -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Informe mensual"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#2C3E50"
+            android:layout_marginBottom="8dp"/>
+
+        <EditText
+            android:id="@+id/etMes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Mes (ej: 2026-03)"
+            android:inputType="text"
+            android:minHeight="48dp"
+            android:layout_marginBottom="8dp"/>
+
+        <Button
+            android:id="@+id/btnInformeMensual"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Generar informe mensual"
+            android:minHeight="56dp"
+            android:layout_marginBottom="8dp"/>
+
+        <TextView
+            android:id="@+id/tvResultadoMensual"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="#2C3E50"
+            android:visibility="gone"
+            android:layout_marginBottom="24dp"/>
+
+        <!-- ── INFORME POR CATEGORÍA ── -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Informe por categoría"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#2C3E50"
+            android:layout_marginBottom="8dp"/>
+
+        <!-- Spinner para seleccionar la categoría -->
+        <Spinner
+            android:id="@+id/spinnerCategoriaInforme"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:layout_marginBottom="8dp"/>
+
+        <Button
+            android:id="@+id/btnInformeCategoria"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Generar informe por categoría"
+            android:minHeight="56dp"
+            android:layout_marginBottom="8dp"/>
+
+        <TextView
+            android:id="@+id/tvResultadoCategoria"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="#2C3E50"
+            android:visibility="gone"
+            android:layout_marginBottom="24dp"/>
+
+        <!-- Botón volver al menú -->
+        <Button
+            android:id="@+id/btnVolver"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Volver"
+            android:textSize="18sp"
+            android:minHeight="64dp"
+            android:layout_marginTop="16dp"/>
+
+    </LinearLayout>
+</ScrollView>

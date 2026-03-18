@@ -1,5 +1,6 @@
 package com.gemma.esterapp.dao;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -27,9 +28,9 @@ public interface CategoriaDAO {
 
     // Devuelve todas las categorias de la tabla
     @Query("SELECT * FROM categorias")
-    List<Categoria> getAllCategorias();
+    LiveData<List<Categoria>> getAllCategorias();
 
     // Busca una categoria por su id
     @Query("SELECT * FROM categorias WHERE id_categoria = :id")
-    Categoria getCategoriaById(int id);
+    LiveData<Categoria> getCategoriaById(int id);
 }

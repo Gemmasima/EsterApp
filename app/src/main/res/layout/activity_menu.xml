@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="48dp"
+    android:background="#FFFFFF">
+
+    <!-- Título del menú principal -->
+    <TextView
+        android:id="@+id/tvBienvenida"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bienvenido"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        android:textColor="#2C3E50"
+        android:layout_marginBottom="48dp"/>
+
+    <!-- Botón para ir a Registrar Gasto -->
+    <Button
+        android:id="@+id/btnGastos"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Gastos"
+        android:textSize="18sp"
+        android:minHeight="64dp"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Botón para ir a Registrar Ingreso -->
+    <Button
+        android:id="@+id/btnIngresos"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ingresos"
+        android:textSize="18sp"
+        android:minHeight="64dp"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Botón para ir a Informes -->
+    <Button
+        android:id="@+id/btnInformes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Informes"
+        android:textSize="18sp"
+        android:minHeight="64dp"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Botón para ir a Gestión de Usuarios, solo visible para Administrador -->
+    <Button
+        android:id="@+id/btnGestionUsuarios"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Gestión de Usuarios"
+        android:textSize="18sp"
+        android:minHeight="64dp"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Botón para cerrar sesión y volver al login -->
+    <Button
+        android:id="@+id/btnCerrarSesion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Cerrar Sesión"
+        android:textSize="18sp"
+        android:minHeight="64dp"
+        android:layout_marginTop="32dp"/>
+
+</LinearLayout>

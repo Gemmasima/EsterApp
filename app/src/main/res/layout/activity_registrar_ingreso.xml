@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="32dp"
+    android:background="#FFFFFF">
+
+    <!-- Título de la pantalla -->
+    <TextView
+        android:id="@+id/tvTitulo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Registrar Ingreso"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:textColor="#2C3E50"
+        android:layout_marginBottom="32dp"/>
+
+    <!-- Campo fecha -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Fecha"
+        android:textSize="16sp"
+        android:textColor="#2C3E50"/>
+
+    <EditText
+        android:id="@+id/etFecha"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="2026-03-17"
+        android:inputType="date"
+        android:minHeight="48dp"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Campo importe -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Importe (€)"
+        android:textSize="16sp"
+        android:textColor="#2C3E50"/>
+
+    <EditText
+        android:id="@+id/etImporte"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="0.00"
+        android:inputType="numberDecimal"
+        android:minHeight="48dp"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Selector tipo de ingreso -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tipo de ingreso"
+        android:textSize="16sp"
+        android:textColor="#2C3E50"/>
+
+    <!-- Spinner con los tipos de ingreso: Efectivo o Tarjeta -->
+    <Spinner
+        android:id="@+id/spinnerTipoIngreso"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Campo notas -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Notas"
+        android:textSize="16sp"
+        android:textColor="#2C3E50"/>
+
+    <EditText
+        android:id="@+id/etNotas"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Notas opcionales"
+        android:inputType="text"
+        android:minHeight="48dp"
+        android:layout_marginBottom="32dp"/>
+
+    <!-- Botón guardar -->
+    <Button
+        android:id="@+id/btnGuardarIngreso"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Guardar Ingreso"
+        android:textSize="18sp"
+        android:minHeight="64dp"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Botón volver al menú -->
+    <Button
+        android:id="@+id/btnVolver"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Volver"
+        android:textSize="18sp"
+        android:minHeight="64dp"/>
+
+    <!-- Mensaje de confirmación o error -->
+    <TextView
+        android:id="@+id/tvMensaje"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:layout_marginTop="16dp"
+        android:visibility="gone"/>
+
+</LinearLayout>

@@ -26,8 +26,10 @@ public abstract class AppDatabase extends RoomDatabase {
     private static final String DB_NAME = "esterapp_db";
 
     // Instancia única de la base de datos (patrón Singleton)
+    //Singleton = una sola instancia para toda la app, compartida por todos.
     // Solo puede existir una conexión a la base de datos a la vez
-    private static AppDatabase instance;
+    // Antes este
+    static AppDatabase miBaseDeDatos;
 
     // Métodos abstractos que devuelven cada DAO
     // Room los implementa automáticamente
@@ -40,9 +42,9 @@ public abstract class AppDatabase extends RoomDatabase {
     // Método para obtener la instancia única de la base de datos
     // synchronized significa que solo un hilo puede acceder a la vez
     public static synchronized AppDatabase getInstance(Context context) {
-        if (instance == null) {
+        if (miBaseDeDatos == null) {
             // Si no existe la instancia, la creamos
-            instance = Room.databaseBuilder(
+            miBaseDeDatos = Room.databaseBuilder(
                             context.getApplicationContext(),
                             AppDatabase.class,
                             DB_NAME)
@@ -50,6 +52,6 @@ public abstract class AppDatabase extends RoomDatabase {
                     .build();
         }
         // Devuelve la instancia existente
-        return instance;
+        return miBaseDeDatos;
     }
 }

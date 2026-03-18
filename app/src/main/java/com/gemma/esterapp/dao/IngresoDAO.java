@@ -1,5 +1,6 @@
 package com.gemma.esterapp.dao;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -26,21 +27,30 @@ public interface IngresoDAO {
 
     // Devuelve todos los ingresos de la tabla
     @Query("SELECT * FROM ingresos")
-    List<Ingreso> getAllIngresos();
+    LiveData<List<Ingreso>> getAllIngresos();
 
     // Devuelve todos los ingresos de un usuario concreto
     @Query("SELECT * FROM ingresos WHERE id_usuario = :idUsuario")
-    List<Ingreso> getIngresosByUsuario(int idUsuario);
+    LiveData<List<Ingreso>> getIngresosByUsuario(int idUsuario);
 
     // Devuelve todos los ingresos de una fecha concreta
     @Query("SELECT * FROM ingresos WHERE fecha = :fecha")
-    List<Ingreso> getIngresosByFecha(String fecha);
+    LiveData<List<Ingreso>> getIngresosByFecha(String fecha);
 
     // Devuelve los ingresos por tipo (efectivo o tarjeta)
     @Query("SELECT * FROM ingresos WHERE tipoingreso = :tipoingreso")
-    List<Ingreso> getIngresosByTipo(String tipoingreso);
+    LiveData<List<Ingreso>> getIngresosByTipo(String tipoingreso);
 
     // Devuelve la suma total de ingresos de un mes concreto para los informes
     @Query("SELECT SUM(importe) FROM ingresos WHERE substr(fecha, 1, 7) = :mes")
-    double getTotalIngresosByMes(String mes);
+    LiveData<Double> getTotalIngresosByMes(String mes);
+
+    // Devuelve la suma total de ingresos de un día concreto para el informe diario
+    @Query("SELECT SUM(importe) FROM ingresos WHERE fecha = :fecha")
+    LiveData<Double> getTotalIngresosByDia(String fecha);
+
+    // Devuelve la suma total de ingresos entre dos fechas para el informe semanal
+    // BETWEEN incluye las dos fechas extremas
+    @Query("SELECT SUM(importe) FROM ingresos WHERE fecha BETWEEN :desde AND :hasta")
+    LiveData<Double> getTotalIngresosByRangoFechas(String desde, String hasta);
 }

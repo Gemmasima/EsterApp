@@ -1,6 +1,7 @@
 package com.gemma.esterapp.dao;
 
 import java.util.List;
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao; // Importaciones @Dao para indicar a Room que esta interfaz es un DAO
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -20,15 +21,16 @@ public interface UsuarioDAO {
     @Delete // Borra un usuario de la tabla usuarios
     void delete(Usuario usuario);
 
-    @Query("SELECT * FROM usuarios") // todos los usuarios de la tabla usuarios
-    List<Usuario> getAllUsuarios(); //lista
+    @Query("SELECT * FROM usuarios") // Devuelve todos los usuarios. LiveData avisa a la pantalla si la lista cambia
+    LiveData<List<Usuario>> getAllUsuarios();
 
-    /* Busca un usuario por su nombre de usuario y contraseña
-     * Se usa para validar el login :usuario y :contrasena son los parámetros que se pasan al metodo*/
-    @Query("SELECT * FROM usuarios WHERE usuario = :usuario AND contrasena = :contraseña")
-    Usuario login(String usuario, String contraseña);
+    /* Busca un usuario por nombre de usuario y contraseña para validar el login
+     * Devuelve el Usuario si las credenciales son correctas, o null si no existe
+     * :usuario y :contrasena son los parámetros que Room conecta con los de Java (sin tilde para evitar errores)*/
+    @Query("SELECT * FROM usuarios WHERE usuario = :usuario AND contrasena = :contrasena")
+    LiveData<Usuario> login(String usuario, String contrasena);
 
-    // Busca un usuario por su id y devuelve un unico usuario, no una lista!!
+    // Busca un usuario por su id. Devuelve un único Usuario o null si no existe. LiveData avisa si cambia
     @Query("SELECT * FROM usuarios WHERE id_usuario = :id")
-    Usuario getUsuarioById(int id);
+    LiveData<Usuario> getUsuarioById(int id);
 }

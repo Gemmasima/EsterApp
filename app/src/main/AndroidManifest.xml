@@ -11,15 +11,44 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.EsterApp">
+        <!-- LoginActivity es la pantalla de inicio de la app -->
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <!-- MainActivity declarada pero ya no es la pantalla de inicio -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="false"/>
+        <!-- MenuActivity es la pantalla principal después del login -->
+        <activity
+            android:name=".ui.MenuActivity"
+            android:exported="false"/>
+        <!-- Pantalla para registrar gastos -->
+        <activity
+            android:name=".ui.RegistrarGastoActivity"
+            android:exported="false"/>
+
+        <!-- Pantalla para registrar ingresos -->
+        <activity
+            android:name=".ui.RegistrarIngresoActivity"
+            android:exported="false"/>
+
+        <!-- Pantalla de informes -->
+        <activity
+            android:name=".ui.InformesActivity"
+            android:exported="false"/>
+
+        <!-- Pantalla de gestión de usuarios, solo para Administrador -->
+        <activity
+            android:name=".ui.GestionUsuariosActivity"
+            android:exported="false"/>
+
+
     </application>
 
 </manifest>
