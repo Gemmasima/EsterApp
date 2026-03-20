@@ -73,6 +73,7 @@ public class LoginActivity extends AppCompatActivity {
         String usuario = etUsuario.getText().toString().trim();
         String contrasena = etContrasena.getText().toString().trim();
 
+
         // Comprobamos que los campos no estén vacíos
         if (usuario.isEmpty() || contrasena.isEmpty()) {
             tvError.setText("Por favor rellena todos los campos");
@@ -85,14 +86,13 @@ public class LoginActivity extends AppCompatActivity {
         usuarioRepository.login(usuario, contrasena).observe(this, new Observer<Usuario>() {
             @Override
             public void onChanged(Usuario usuarioEncontrado) {
-
                 if (usuarioEncontrado != null) {
                     // Las credenciales son correctas → navegamos al menú
                     // Intent es el mecanismo de Android para navegar entre pantallas
                     Intent intent = new Intent(LoginActivity.this, MenuActivity.class);
 
                     // Pasamos el id del usuario al menú para saber quién ha iniciado sesión
-                    intent.putExtra("id_usuario", usuarioEncontrado.getIdUsuario());
+                    intent.putExtra("id_usuario", usuarioEncontrado.getId_usuario());
 
                     startActivity(intent);
 
