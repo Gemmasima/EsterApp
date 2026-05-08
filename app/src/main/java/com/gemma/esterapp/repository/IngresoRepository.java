@@ -23,11 +23,7 @@ public class IngresoRepository {
     // Hilo secundario para operaciones de escritura (insert, update, delete)
     private final ExecutorService executorService;
 
-    /**
-     * CONSTRUCTOR
-     * Obtiene la instancia única de la base de datos (Singleton)
-     * y prepara el hilo secundario.
-     */
+    // CONSTRUCTOR — obtiene la instancia única de la BD y prepara el hilo secundario
     public IngresoRepository(Application application) {
         AppDatabase db = AppDatabase.getInstance(application);
         ingresoDAO = db.ingresoDAO();
@@ -57,7 +53,7 @@ public class IngresoRepository {
     // OPERACIONES DE LECTURA (devuelven LiveData)
     // ─────────────────────────────────────────────
 
-    // Devuelve todos los ingresos. La pantalla se actualiza sola si cambia algo
+    // Devuelve todos los ingresos — la UI se actualiza sola si cambia algo
     public LiveData<List<Ingreso>> getAllIngresos() {
         return ingresoDAO.getAllIngresos();
     }
@@ -72,23 +68,33 @@ public class IngresoRepository {
         return ingresoDAO.getIngresosByFecha(fecha);
     }
 
-    // Devuelve los ingresos por tipo (efectivo o tarjeta)
+    // Devuelve los ingresos filtrados por tipo: "Efectivo" o "Tarjeta"
     public LiveData<List<Ingreso>> getIngresosByTipo(String tipoingreso) {
         return ingresoDAO.getIngresosByTipo(tipoingreso);
     }
 
-    // Devuelve la suma total de ingresos de un mes concreto (para informes)
+    // Devuelve la suma total de ingresos de un mes — usado en InformesActivity
     public LiveData<Double> getTotalIngresosByMes(String mes) {
         return ingresoDAO.getTotalIngresosByMes(mes);
     }
 
-    // Devuelve la suma total de ingresos de un día concreto (para informe diario)
+    // Devuelve la suma total de ingresos de un día concreto
     public LiveData<Double> getTotalIngresosByDia(String fecha) {
         return ingresoDAO.getTotalIngresosByDia(fecha);
     }
 
-    // Devuelve la suma total de ingresos entre dos fechas (para informe semanal)
+    // Devuelve la suma total de ingresos entre dos fechas
     public LiveData<Double> getTotalIngresosByRangoFechas(String desde, String hasta) {
         return ingresoDAO.getTotalIngresosByRangoFechas(desde, hasta);
+    }
+
+    // Devuelve todos los ingresos entre dos fechas — usado para generar el CSV
+    public LiveData<List<Ingreso>> getIngresosByRangoFechas(String desde, String hasta) {
+        return ingresoDAO.getIngresosByRangoFechas(desde, hasta);
+    }
+
+    // Devuelve todos los ingresos de un mes — usado en InformesActivity para la lista
+    public LiveData<List<Ingreso>> getIngresosByMes(String mes) {
+        return ingresoDAO.getIngresosByMes(mes);
     }
 }

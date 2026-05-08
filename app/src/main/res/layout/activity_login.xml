@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    LinearLayout raíz — contenedor principal de la pantalla de login.
+    orientation="vertical" → los elementos se apilan de arriba a abajo.
+    gravity="center" → centra todo el contenido vertical y horizontalmente.
+    padding="32dp" → margen interior en los 4 lados para que no pegue a los bordes.
+    background="#FFFFFF" → fondo blanco.
+-->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -8,7 +16,13 @@
     android:padding="32dp"
     android:background="#FFFFFF">
 
-    <!-- Título de la app -->
+    <!--
+        Título de la app — texto grande centrado en la parte superior.
+        textSize="36sp" → sp (scale-independent pixels) respeta el tamaño
+        de fuente configurado por el usuario en los ajustes del sistema.
+        textStyle="bold" → negrita.
+        layout_marginBottom="48dp" → separación grande entre el título y los campos.
+    -->
     <TextView
         android:id="@+id/tvTitulo"
         android:layout_width="wrap_content"
@@ -19,7 +33,14 @@
         android:textColor="#2C3E50"
         android:layout_marginBottom="48dp"/>
 
-    <!-- Campo nombre de usuario -->
+    <!--
+        Campo de texto para el nombre de usuario.
+        layout_width="match_parent" → ocupa todo el ancho disponible.
+        hint="Usuario" → texto gris que desaparece al escribir.
+        inputType="text" → teclado normal, sin restricciones.
+        minHeight="48dp" → altura mínima recomendada por Material Design
+        para que el área táctil sea cómoda en tablet.
+    -->
     <EditText
         android:id="@+id/etUsuario"
         android:layout_width="match_parent"
@@ -29,24 +50,75 @@
         android:layout_marginBottom="16dp"
         android:minHeight="48dp"/>
 
-    <!-- Campo contraseña, los caracteres se ocultan con textPassword -->
-    <EditText
-        android:id="@+id/etContrasena"
+    <!--
+        LinearLayout horizontal que agrupa el campo de contraseña y el botón ojo.
+        orientation="horizontal" → los elementos se colocan uno al lado del otro.
+        gravity="center_vertical" → alinea verticalmente al centro el campo y el botón.
+        Necesitamos este contenedor porque Android no permite poner un botón
+        dentro de un EditText directamente.
+    -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Contraseña"
-        android:inputType="textPassword"
-        android:layout_marginBottom="32dp"
-        android:minHeight="48dp"/>
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="32dp">
 
-    <!-- Botón de entrar -->
+        <!--
+            Campo de contraseña dentro del LinearLayout horizontal.
+            layout_width="0dp" + layout_weight="1" → técnica de peso:
+            "ocupa todo el espacio horizontal que sobre después del botón ojo".
+            Si pusieramos match_parent no dejaría sitio para el botón.
+            inputType="textPassword" → oculta los caracteres con puntos.
+            El Java cambia este inputType al pulsar el botón ojo.
+        -->
+        <EditText
+            android:id="@+id/etContrasena"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="Contraseña"
+            android:inputType="textPassword"
+            android:minHeight="48dp"/>
+
+        <!--
+            Botón ojo para mostrar/ocultar la contraseña.
+            src="@android:drawable/ic_menu_view" → icono de ojo que viene
+            incluido en Android, sin necesidad de añadir imágenes al proyecto.
+            background="?attr/selectableItemBackgroundBorderless" → efecto
+            de ripple (ondas) al pulsar, sin borde ni fondo visible.
+            contentDescription → texto para accesibilidad (lectores de pantalla).
+        -->
+        <ImageButton
+            android:id="@+id/botonOjo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_menu_view"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Mostrar u ocultar contraseña"
+            android:padding="8dp"/>
+
+    </LinearLayout>
+
+    <!--
+        Botón principal de inicio de sesión.
+        layout_width="match_parent" → ocupa todo el ancho para que sea fácil de pulsar.
+        El Java conecta este botón con el método validarLogin().
+    -->
     <Button
         android:id="@+id/btnEntrar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Entrar"/>
 
-    <!-- Mensaje de error, invisible hasta que el login falle -->
+    <!--
+        Mensaje de error — invisible por defecto (visibility="gone").
+        gone → el elemento no ocupa espacio en pantalla hasta que se muestre.
+        invisible → el elemento ocupa espacio pero no se ve (no lo usamos aquí).
+        El Java lo hace visible con tvError.setVisibility(View.VISIBLE)
+        cuando las credenciales son incorrectas o los campos están vacíos.
+        textColor="#E74C3C" → rojo para indicar error.
+    -->
     <TextView
         android:id="@+id/tvError"
         android:layout_width="wrap_content"

@@ -1,9 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    themes.xml — define el tema visual de la app para el modo claro (día).
+    Todos los componentes de la app heredan estos colores automáticamente.
+    Referenciado en AndroidManifest.xml con android:theme="@style/Theme.EsterApp".
+-->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+
+    <!--
+        Base.Theme.EsterApp — tema base con los colores principales.
+        parent="Theme.Material3.DayNight.NoActionBar" →
+        hereda de Material Design 3, soporta modo día/noche
+        y no muestra la barra de título superior (NoActionBar).
+    -->
     <style name="Base.Theme.EsterApp" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+
+        <!-- Color principal: azul medio — botones, elementos activos -->
+        <item name="colorPrimary">#0288D1</item>
+
+        <!-- Variante más oscura del azul — bordes y estados pressed -->
+        <item name="colorPrimaryVariant">#01579B</item>
+
+        <!-- Color del texto/iconos sobre colorPrimary — blanco para contraste -->
+        <item name="colorOnPrimary">#FFFFFF</item>
+
+        <!-- Color secundario: azul claro — acentos y elementos secundarios -->
+        <item name="colorSecondary">#4FC3F7</item>
+
     </style>
 
+    <!--
+        Theme.EsterApp — tema final que usa la app.
+        Hereda todo de Base.Theme.EsterApp sin añadir nada más.
+        Esta separación permite personalizar el tema base sin tocar el tema final.
+    -->
     <style name="Theme.EsterApp" parent="Base.Theme.EsterApp" />
+
 </resources>

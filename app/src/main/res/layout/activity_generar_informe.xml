@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    LinearLayout raíz vertical.
+    Estructura: ScrollView (todo el formulario) + barra inferior fija.
+-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#FFFFFF">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="32dp">
+
+            <!-- Título de la pantalla -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Generar informe CSV"
+                android:textSize="28sp"
+                android:textStyle="bold"
+                android:textColor="#2C3E50"
+                android:layout_marginBottom="24dp"/>
+
+            <!-- Etiqueta periodo -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Periodo"
+                android:textSize="16sp"
+                android:textColor="#2C3E50"
+                android:layout_marginBottom="8dp"/>
+
+            <!--
+                Botón que abre el MaterialDatePicker de rango de fechas.
+                Al seleccionar las fechas el Java actualiza tvRangoFechas.
+            -->
+            <Button
+                android:id="@+id/btnSeleccionarFechas"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Seleccionar fechas"
+                android:textSize="16sp"
+                android:minHeight="56dp"
+                android:layout_marginBottom="8dp"/>
+
+            <!--
+                Muestra el rango seleccionado — oculto por defecto.
+                El Java lo hace visible y escribe "Del DD/MM/YYYY al DD/MM/YYYY".
+            -->
+            <TextView
+                android:id="@+id/tvRangoFechas"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textColor="#2C3E50"
+                android:visibility="gone"
+                android:layout_marginBottom="24dp"/>
+
+            <!-- Etiqueta tipo -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tipo"
+                android:textSize="16sp"
+                android:textColor="#2C3E50"
+                android:layout_marginBottom="8dp"/>
+
+            <!--
+                Spinner con tres opciones: Gastos, Ingresos, Todo.
+                Al cambiar el spinner el Java muestra u oculta los checklists.
+            -->
+            <Spinner
+                android:id="@+id/spinnerTipo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:layout_marginBottom="24dp"/>
+
+            <!--
+                Checklist de categorías — oculto por defecto (visibility="gone").
+                Solo se muestra cuando spinner = Gastos.
+                cbTodoCategorias marcado por defecto (checked="true").
+            -->
+            <LinearLayout
+                android:id="@+id/layoutCategorias"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:layout_marginBottom="24dp">
+
+                <TextView android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Categorías" android:textSize="16sp"
+                    android:textColor="#2C3E50" android:layout_marginBottom="8dp"/>
+
+                <!-- checked="true" → Todo marcado por defecto -->
+                <CheckBox android:id="@+id/cbTodoCategorias"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="Todo" android:textSize="16sp" android:checked="true"/>
+                <CheckBox android:id="@+id/cbProveedoresMateriales"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="Proveedores de materiales" android:textSize="16sp"/>
+                <CheckBox android:id="@+id/cbProveedoresServicios"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="Proveedores de servicios" android:textSize="16sp"/>
+                <CheckBox android:id="@+id/cbImpuestos"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="Impuestos" android:textSize="16sp"/>
+                <CheckBox android:id="@+id/cbSalarios"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="Salarios" android:textSize="16sp"/>
+                <CheckBox android:id="@+id/cbVehiculos"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="Vehículos" android:textSize="16sp"/>
+
+            </LinearLayout>
+
+            <!--
+                Checklist de tipo de ingreso — oculto por defecto (visibility="gone").
+                Solo se muestra cuando spinner = Ingresos.
+                cbTodoIngresos marcado por defecto.
+            -->
+            <LinearLayout
+                android:id="@+id/layoutTipoIngreso"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:layout_marginBottom="24dp">
+
+                <TextView android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tipo de ingreso" android:textSize="16sp"
+                    android:textColor="#2C3E50" android:layout_marginBottom="8dp"/>
+
+                <CheckBox android:id="@+id/cbTodoIngresos"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="Todo" android:textSize="16sp" android:checked="true"/>
+                <CheckBox android:id="@+id/cbEfectivo"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="Efectivo" android:textSize="16sp"/>
+                <CheckBox android:id="@+id/cbTarjeta"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="Tarjeta" android:textSize="16sp"/>
+
+            </LinearLayout>
+
+            <!-- Botón generar CSV -->
+            <Button
+                android:id="@+id/btnGenerarCSV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Generar"
+                android:textSize="18sp"
+                android:minHeight="64dp"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Barra inferior de navegación — fija -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:orientation="horizontal"
+        android:background="#F0F0F0"
+        android:gravity="center">
+
+        <ImageButton android:id="@+id/iconoHome"
+            android:layout_width="0dp" android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@android:drawable/ic_menu_compass"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Ir al menú principal"
+            android:scaleType="center"/>
+
+        <ImageButton android:id="@+id/iconoInformes"
+            android:layout_width="0dp" android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@android:drawable/ic_menu_sort_by_size"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Ir a informes"
+            android:scaleType="center"/>
+
+    </LinearLayout>
+
+</LinearLayout>

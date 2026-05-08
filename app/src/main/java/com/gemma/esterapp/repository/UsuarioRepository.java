@@ -9,110 +9,96 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-/** Arquitectura completa:
- * UI → Repository → DAO → Room → SQLite
-
- * REPOSITORIO DE USUARIO: El Repositorio es la capa que está entre la UI y la base de datos.
- * La Activity no habla directamente con el DAO.
- * La Activity habla con el Repositorio, y el Repositorio habla con el DAO.
-
- * ¿Por qué esta capa existe? Mantiene la UI limpia (sin lógica de base de datos)
+/**
+ * REPOSITORIO DE USUARIO
+ * Capa intermedia entre la UI y la base de datos.
+ * La Activity nunca habla directamente con UsuarioDAO, siempre pasa por aquí.
+ * Arquitectura: UI → Repository → DAO → Room → SQLite
+ *
+ * Ventajas de esta capa:
+ * - Mantiene la UI limpia, sin lógica de base de datos
  * - Centraliza el acceso a los datos en un solo sitio
- * - Facilita las pruebas del proyecto */
+ * - Facilita las pruebas del proyecto
+ */
 public class UsuarioRepository {
 
+    // DAO para acceder a la tabla usuarios
+    private final UsuarioDAO usuarioDAO;
 
-    private final UsuarioDAO usuarioDAO; // El DAO que usaremos para acceder a la base de datos
-
-    /** ExecutorService: es un gestor de hilos en segundo plano.
-
-     * ¿Por qué necesitamos hilos?
-     * Android no permite hacer operaciones de base de datos en el hilo principal (el hilo de la UI).
-     * Si lo hiciéramos, la app se bloquearía y daría error.
-     * Por eso usamos un hilo separado para todas las operaciones de escritura/lectura.
-
-     * Executors.newSingleThreadExecutor() crea exactamente 1 hilo secundario.
-     * Las operaciones se ejecutan una detrás de otra, en orden. */
-
+    // ExecutorService: gestor de hilos en segundo plano
+    // Android no permite operaciones de BD en el hilo principal (UI thread)
+    // newSingleThreadExecutor() crea 1 hilo secundario — las operaciones van en orden
     private final ExecutorService executorService;
 
-    /** CONSTRUCTOR - Recibe Application (no Context) porque Application vive durante toda la vida de la app.
-     * Evita fugas de memoria que ocurrirían si guardáramos una Activity como Context.
-     * @param application La aplicación Android*/
+    // CONSTRUCTOR — recibe Application (no Context) porque vive durante toda la app
+    // Evita fugas de memoria que ocurrirían guardando una Activity como Context
     public UsuarioRepository(Application application) {
-        // Obtenemos la instancia única de la base de datos (Singleton)
-        AppDatabase db = AppDatabase.getInstance(application);
-
-        // Obtenemos el DAO de usuario desde la base de datos
-        usuarioDAO = db.usuarioDAO();
-
-        // Creamos el ejecutor con 1 hilo secundario
-        executorService = Executors.newSingleThreadExecutor();
+        AppDatabase db = AppDatabase.getInstance(application); // instancia única Singleton
+        usuarioDAO = db.usuarioDAO();                          // obtenemos el DAO de usuarios
+        executorService = Executors.newSingleThreadExecutor(); // creamos el hilo secundario
     }
 
     // ─────────────────────────────────────────────
-    // OPERACIONES DE ESCRITURA (van en hilo secundario)
+    // OPERACIONES DE ESCRITURA (hilo secundario)
     // ─────────────────────────────────────────────
 
-    /** Inserta un nuevo usuario en la base de datos.
-     * executorService.execute(...) significa:
-     * "Ejecuta esto en el hilo secundario, no en el hilo de la UI"
-     * @param usuario El objeto Usuario a insertar */
-
+    // Inserta un usuario nuevo — se ejecuta en hilo secundario
     public void insert(Usuario usuario) {
         executorService.execute(() -> usuarioDAO.insert(usuario));
     }
 
-    /**Actualiza un usuario existente en la base de datos.
-     * @param usuario El objeto Usuario con los datos nuevos */
-
+    // Actualiza un usuario existente — se ejecuta en hilo secundario
     public void update(Usuario usuario) {
         executorService.execute(() -> usuarioDAO.update(usuario));
     }
 
-    /**Elimina un usuario de la base de datos.
-     * @param usuario El objeto Usuario a eliminar */
-
+    // Elimina un usuario — se ejecuta en hilo secundario
+    // Puede fallar si el usuario tiene gastos o ingresos asociados (RESTRICT)
     public void delete(Usuario usuario) {
         executorService.execute(() -> usuarioDAO.delete(usuario));
+    }
+
+    // Interfaz para avisar a la Activity si el delete ha ido bien o mal
+    // onSuccess() → el delete funcionó correctamente
+    // onError()   → la BD lanzó excepción RESTRICT (usuario con movimientos asociados)
+    public interface DeleteCallback {
+        void onSuccess();
+        void onError(String mensaje);
+    }
+
+    // Delete con callback — avisa a la Activity del resultado
+    // A diferencia de delete() normal, este captura la excepción RESTRICT
+    // y la comunica a la UI en lugar de silenciarla
+    public void deleteConCallback(Usuario usuario, DeleteCallback callback) {
+        executorService.execute(() -> {
+            try {
+                usuarioDAO.delete(usuario);
+                callback.onSuccess(); // el delete fue bien
+            } catch (Exception e) {
+                // RESTRICT: el usuario tiene gastos o ingresos asociados
+                callback.onError("No se puede eliminar este usuario porque tiene gastos o ingresos asociados");
+            }
+        });
     }
 
     // ─────────────────────────────────────────────
     // OPERACIONES DE LECTURA (devuelven LiveData)
     // ─────────────────────────────────────────────
 
-    /**Devuelve todos los usuarios de la base de datos.
-     * ¿Qué es LiveData?  es un contenedor de datos que avisa automáticamente a la UI
-     * cuando los datos cambian. La UI no tiene que preguntar cada vez si hay cambios,
-     * LiveData lo notifica solo.
+    // LiveData: la UI se actualiza automáticamente cuando cambian los datos
+    // Room gestiona el hilo de LiveData solo — NO necesitamos executorService aquí
 
-     * Room gestiona el hilo de LiveData automáticamente,
-     * por eso aquí NO necesitamos executorService.
-     * @return Lista observable de todos los usuarios */
-
+    // Devuelve todos los usuarios de la tabla
     public LiveData<List<Usuario>> getAllUsuarios() {
         return usuarioDAO.getAllUsuarios();
     }
 
-    /** Busca un usuario por su nombre de usuario y contraseña.
-     * Se usa para validar el login.
-
-     * IMPORTANTE: Este metodo devuelve LiveData<Usuario>.
-     * Si las credenciales son correctas → devuelve el objeto Usuario.
-     * Si las credenciales son incorrectas → devuelve null.
-
-     * @param usuario    El nombre de usuario introducido en el login
-     * @param contrasena La contraseña introducida en el login
-     * @return El usuario encontrado, o null si no existe */
-
+    // Valida el login — devuelve el Usuario si las credenciales son correctas, null si no
     public LiveData<Usuario> login(String usuario, String contrasena) {
         return usuarioDAO.login(usuario, contrasena);
     }
 
-    /** Busca un usuario por su ID.
-     * @param idUsuario El ID del usuario a buscar
-     * @return El usuario encontrado, o null si no existe */
-
+    // Busca un usuario por su id
     public LiveData<Usuario> getUsuarioById(int idUsuario) {
         return usuarioDAO.getUsuarioById(idUsuario);
     }

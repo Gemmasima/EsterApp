@@ -1,13 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?><!--
-   Sample backup rules file; uncomment and customize as necessary.
-   See https://developer.android.com/guide/topics/data/autobackup
-   for details.
-   Note: This file is ignored for devices older than API 31
-   See https://developer.android.com/about/versions/12/backup-restore
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    backup_rules.xml — define qué datos se incluyen en las copias de seguridad
+    automáticas de Android (versiones anteriores a Android 12).
+    Referenciado en AndroidManifest.xml con android:fullBackupContent.
+    NOTA: Este archivo se ignora en dispositivos con API 31+ (Android 12 o superior).
+    Para esos dispositivos se usa data_extraction_rules.xml.
+    La tablet Honor ELN-W09 tiene Android 13 (API 33) — este archivo no se aplica.
+    Está en el proyecto porque Android Studio lo genera automáticamente.
 -->
 <full-backup-content>
-    <!--
-   <include domain="sharedpref" path="."/>
-   <exclude domain="sharedpref" path="device.xml"/>
--->
+    <!-- Sin reglas: Android hace copia de seguridad de todo por defecto -->
 </full-backup-content>

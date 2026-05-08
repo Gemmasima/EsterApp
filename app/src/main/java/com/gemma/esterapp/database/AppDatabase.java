@@ -16,52 +16,65 @@ import com.gemma.esterapp.model.Ingreso;
 import com.gemma.esterapp.model.Subcategoria;
 import com.gemma.esterapp.model.Usuario;
 
-// @Database le dice a Room que esta es la clase principal de la base de datos
-// entities: lista de todas las tablas que tiene la base de datos
-// version: version de la base de datos, empieza en 1
-@Database(entities = {Usuario.class, Gasto.class, Ingreso.class, Categoria.class, Subcategoria.class}, version = 1)
-public abstract class AppDatabase extends RoomDatabase {
+// @Database le dice a Room que esta clase es la base de datos principal de la app
+// entities: declara todas las tablas que existen en la base de datos
+// version = 1: version actual de la BD, se incrementa si se cambia la estructura
+@Database(entities = {Usuario.class, Gasto.class, Ingreso.class, Categoria.class, Subcategoria.class}, version = 2)
+public abstract class AppDatabase extends RoomDatabase { // abstract porque Room genera la implementacion automaticamente
 
-    // Nombre del archivo de la base de datos en la tablet
+    // Nombre del archivo fisico que Room crea en el almacenamiento interno de la tablet
     private static final String DB_NAME = "esterapp_db";
 
-    // Instancia unica de la base de datos (patron Singleton)
-    // Singleton = una sola instancia para toda la app, compartida por todos.
-    // Solo puede existir una conexion a la base de datos a la vez.
-    // Sin modificador private para que DatosIniciales (mismo paquete database)
-    // pueda acceder a ella para insertar los datos iniciales
+    // Variable que guarda la unica instancia de la base de datos
+    // static: pertenece a la clase, no a un objeto concreto
+    // Sin private para que DatosIniciales (mismo paquete) pueda acceder a ella
     static AppDatabase miBaseDeDatos;
 
-    // Metodos abstractos que devuelven cada DAO
-    // Room los implementa automaticamente
-    public abstract UsuarioDAO usuarioDAO();
-    public abstract GastoDAO gastoDAO();
-    public abstract IngresoDAO ingresoDAO();
-    public abstract CategoriaDAO categoriaDAO();
-    public abstract SubcategoriaDAO subcategoriaDAO();
+    // Cada metodo abstracto devuelve un DAO
+    // Room genera automaticamente el codigo de cada uno al compilar
+    public abstract UsuarioDAO usuarioDAO();       // operaciones sobre la tabla usuarios
+    public abstract GastoDAO gastoDAO();           // operaciones sobre la tabla gastos
+    public abstract IngresoDAO ingresoDAO();       // operaciones sobre la tabla ingresos
+    public abstract CategoriaDAO categoriaDAO();   // operaciones sobre la tabla categorias
+    public abstract SubcategoriaDAO subcategoriaDAO(); // operaciones sobre la tabla subcategorias
 
-    // Metodo para obtener la instancia unica de la base de datos
-    // synchronized significa que solo un hilo puede acceder a la vez
+    // getInstance() es el metodo que toda la app usa para obtener la base de datos
+    // synchronized: garantiza que si dos hilos llaman a la vez, solo uno entra
+    // Esto evita que se creen dos instancias distintas por accidente
     public static synchronized AppDatabase getInstance(Context context) {
+
+        // Solo creamos la instancia si todavia no existe
         if (miBaseDeDatos == null) {
-            // Si no existe la instancia, la creamos
+
+            // Room.databaseBuilder construye la base de datos con su configuracion
             miBaseDeDatos = Room.databaseBuilder(
-                            context.getApplicationContext(),
-                            AppDatabase.class,
-                            DB_NAME)
-                    // Si cambia la version, recrea la BD (solo en desarrollo)
+                            context.getApplicationContext(), // contexto de la app, no de una pantalla
+                            AppDatabase.class,              // clase que define la estructura de la BD
+                            DB_NAME)                        // nombre del archivo fisico en la tablet
+
+                    // Si la version cambia, Room borra y recrea la BD automaticamente
+                    // Solo se usa en desarrollo, en produccion se usaria una migracion
                     .fallbackToDestructiveMigration()
-                    // Conecta DatosIniciales para insertar datos la primera vez
+
+                    // Registra DatosIniciales como callback
+                    // DatosIniciales.onCreate() se ejecutara cuando la BD se cree por primera vez
                     .addCallback(new DatosIniciales())
+
+                    // build() termina de configurar Room pero todavia NO crea el archivo fisico
                     .build();
 
-            // IMPORTANTE: Room no crea fisicamente la BD hasta que alguien
-            // hace la primera consulta. Esta linea fuerza la creacion inmediata
-            // del archivo esterapp_db y ejecuta DatosIniciales.onCreate()
-            // antes de que el usuario intente hacer login
+            // SOLUCION AL PROBLEMA DE INICIALIZACION:
+            // Room no crea fisicamente el archivo esterapp_db hasta que alguien
+            // hace la primera consulta. Si no forzamos esto, DatosIniciales.onCreate()
+            // no se ejecutaria hasta que el usuario pulsara Entrar en el login,
+            // y la tabla usuarios estaria vacia en ese momento.
+            // getWritableDatabase() fuerza la creacion inmediata del archivo
+            // y dispara DatosIniciales.onCreate() con todas las inserciones
+            // antes de que la pantalla de login este disponible para el usuario
             miBaseDeDatos.getOpenHelper().getWritableDatabase();
         }
-        // Devuelve la instancia existente
+
+        // Si la instancia ya existe, la devolvemos directamente sin crear nada nuevo
         return miBaseDeDatos;
     }
 }

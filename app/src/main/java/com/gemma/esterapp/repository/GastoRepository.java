@@ -23,11 +23,7 @@ public class GastoRepository {
     // Hilo secundario para operaciones de escritura (insert, update, delete)
     private final ExecutorService executorService;
 
-    /**
-     * CONSTRUCTOR
-     * Obtiene la instancia única de la base de datos (Singleton)
-     * y prepara el hilo secundario.
-     */
+    // CONSTRUCTOR — obtiene la instancia única de la BD y prepara el hilo secundario
     public GastoRepository(Application application) {
         AppDatabase db = AppDatabase.getInstance(application);
         gastoDAO = db.gastoDAO();
@@ -57,7 +53,7 @@ public class GastoRepository {
     // OPERACIONES DE LECTURA (devuelven LiveData)
     // ─────────────────────────────────────────────
 
-    // Devuelve todos los gastos. La pantalla se actualiza sola si cambia algo
+    // Devuelve todos los gastos — la UI se actualiza sola si cambia algo
     public LiveData<List<Gasto>> getAllGastos() {
         return gastoDAO.getAllGastos();
     }
@@ -77,18 +73,28 @@ public class GastoRepository {
         return gastoDAO.getGastosByFecha(fecha);
     }
 
-    // Devuelve la suma total de gastos de un mes concreto (para informes)
+    // Devuelve la suma total de gastos de un mes — usado en InformesActivity
     public LiveData<Double> getTotalGastosByMes(String mes) {
         return gastoDAO.getTotalGastosByMes(mes);
     }
-    // Devuelve la suma total de gastos de un día concreto (para informe diario)
+
+    // Devuelve la suma total de gastos de un día concreto
     public LiveData<Double> getTotalGastosByDia(String fecha) {
         return gastoDAO.getTotalGastosByDia(fecha);
     }
 
-    // Devuelve la suma total de gastos entre dos fechas (para informe semanal)
+    // Devuelve la suma total de gastos entre dos fechas
     public LiveData<Double> getTotalGastosByRangoFechas(String desde, String hasta) {
         return gastoDAO.getTotalGastosByRangoFechas(desde, hasta);
     }
 
+    // Devuelve todos los gastos entre dos fechas — usado para generar el CSV
+    public LiveData<List<Gasto>> getGastosByRangoFechas(String desde, String hasta) {
+        return gastoDAO.getGastosByRangoFechas(desde, hasta);
+    }
+
+    // Devuelve todos los gastos de un mes — usado en InformesActivity para la lista
+    public LiveData<List<Gasto>> getGastosByMes(String mes) {
+        return gastoDAO.getGastosByMes(mes);
+    }
 }

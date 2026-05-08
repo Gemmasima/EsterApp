@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    LinearLayout raíz — contenedor principal del menú.
+    orientation="vertical" → los botones se apilan de arriba a abajo.
+    gravity="center" → centra todo el contenido en la pantalla.
+    padding="48dp" → margen interior generoso, pensado para tablet.
+    background="#FFFFFF" → fondo blanco.
+-->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -8,7 +16,14 @@
     android:padding="48dp"
     android:background="#FFFFFF">
 
-    <!-- Título del menú principal -->
+    <!--
+        Texto de bienvenida — muestra "Bienvenido, [nombre]" al cargar.
+        El texto por defecto "Bienvenido" se sobreescribe en el Java con
+        tvBienvenida.setText("Bienvenido, " + usuario.getNombre())
+        una vez que la BD devuelve el usuario que ha iniciado sesión.
+        textSize="32sp" → tamaño grande, visible en tablet.
+        layout_marginBottom="48dp" → separación grande entre título y botones.
+    -->
     <TextView
         android:id="@+id/tvBienvenida"
         android:layout_width="wrap_content"
@@ -19,7 +34,13 @@
         android:textColor="#2C3E50"
         android:layout_marginBottom="48dp"/>
 
-    <!-- Botón para ir a Registrar Gasto -->
+    <!--
+        Botón Gastos → navega a RegistrarGastoActivity.
+        layout_width="match_parent" → ancho completo, fácil de pulsar en tablet.
+        textSize="18sp" → texto grande para tablet.
+        minHeight="64dp" → altura mínima generosa para área táctil cómoda.
+        El Java conecta este botón con startActivity() en MenuActivity.
+    -->
     <Button
         android:id="@+id/btnGastos"
         android:layout_width="match_parent"
@@ -29,7 +50,11 @@
         android:minHeight="64dp"
         android:layout_marginBottom="16dp"/>
 
-    <!-- Botón para ir a Registrar Ingreso -->
+    <!--
+        Botón Ingresos → navega a RegistrarIngresoActivity.
+        Misma estructura que btnGastos — todos los botones de navegación
+        tienen el mismo tamaño y separación para consistencia visual.
+    -->
     <Button
         android:id="@+id/btnIngresos"
         android:layout_width="match_parent"
@@ -39,7 +64,11 @@
         android:minHeight="64dp"
         android:layout_marginBottom="16dp"/>
 
-    <!-- Botón para ir a Informes -->
+    <!--
+        Botón Informes → navega a InformesActivity.
+        El Java también pasa el rol del usuario a InformesActivity
+        para controlar quién puede eliminar movimientos.
+    -->
     <Button
         android:id="@+id/btnInformes"
         android:layout_width="match_parent"
@@ -49,7 +78,14 @@
         android:minHeight="64dp"
         android:layout_marginBottom="16dp"/>
 
-    <!-- Botón para ir a Gestión de Usuarios, solo visible para Administrador -->
+    <!--
+        Botón Gestión de Usuarios → navega a GestionUsuariosActivity.
+        Este botón existe en el XML pero el Java lo oculta por defecto:
+        btnGestionUsuarios.setVisibility(View.GONE)
+        Solo lo hace visible si el rol del usuario es "Administrador":
+        btnGestionUsuarios.setVisibility(View.VISIBLE)
+        Gerente y Trabajador nunca ven este botón.
+    -->
     <Button
         android:id="@+id/btnGestionUsuarios"
         android:layout_width="match_parent"
@@ -59,7 +95,12 @@
         android:minHeight="64dp"
         android:layout_marginBottom="16dp"/>
 
-    <!-- Botón para cerrar sesión y volver al login -->
+    <!--
+        Botón Cerrar Sesión → vuelve al login cerrando todas las pantallas.
+        layout_marginTop="32dp" → separación extra para diferenciarlo visualmente
+        de los botones de navegación — indica que es una acción diferente.
+        El Java usa FLAG_ACTIVITY_CLEAR_TOP para limpiar toda la pila de Activities.
+    -->
     <Button
         android:id="@+id/btnCerrarSesion"
         android:layout_width="match_parent"

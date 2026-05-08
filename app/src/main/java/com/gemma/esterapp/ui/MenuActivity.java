@@ -15,32 +15,37 @@ import com.gemma.esterapp.repository.UsuarioRepository;
 
 /**
  * MENUACTIVITY
- * Pantalla principal después del login.
- * Muestra los botones de navegación según el rol del usuario.
- * Administrador ve todos los botones incluido Gestión de Usuarios.
- * Gerente y Trabajador no ven el botón de Gestión de Usuarios.
+ * Pantalla principal después del login. Hub de navegación de la app.
+ * Muestra el nombre del usuario que ha iniciado sesión.
+ * Controla la visibilidad del botón Gestión de Usuarios según el rol:
+ * - Administrador → ve todos los botones incluido Gestión de Usuarios
+ * - Gerente y Trabajador → no ven el botón Gestión de Usuarios
  */
 public class MenuActivity extends AppCompatActivity {
 
-    // Elementos visuales del XML activity_menu.xml
-    private TextView tvBienvenida;
-    private Button btnGastos;
-    private Button btnIngresos;
-    private Button btnInformes;
-    private Button btnGestionUsuarios;
-    private Button btnCerrarSesion;
+    // Elementos visuales conectados al XML activity_menu.xml
+    private TextView tvBienvenida;          // muestra "Bienvenido, [nombre]"
+    private Button btnGastos;               // navega a RegistrarGastoActivity
+    private Button btnIngresos;             // navega a RegistrarIngresoActivity
+    private Button btnInformes;             // navega a InformesActivity
+    private Button btnGestionUsuarios;      // solo visible para Administrador
+    private Button btnCerrarSesion;         // vuelve al login y cierra la sesión
 
     // Repositorio para obtener los datos del usuario que ha iniciado sesión
     private UsuarioRepository usuarioRepository;
+
+    // Guardamos el rol aquí para usarlo en los listeners de los botones
+    // (los listeners se ejecutan después del observe(), fuera de su scope)
+    private String rolUsuario = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Le decimos a Android qué XML usar como diseño de esta pantalla
+        // Indicamos a Android qué XML usar como diseño de esta pantalla
         setContentView(R.layout.activity_menu);
 
-        // Conectamos cada variable Java con su elemento del XML por su id
+        // Conectamos cada variable Java con su elemento del XML usando su id
         tvBienvenida = findViewById(R.id.tvBienvenida);
         btnGastos = findViewById(R.id.btnGastos);
         btnIngresos = findViewById(R.id.btnIngresos);
@@ -48,42 +53,45 @@ public class MenuActivity extends AppCompatActivity {
         btnGestionUsuarios = findViewById(R.id.btnGestionUsuarios);
         btnCerrarSesion = findViewById(R.id.btnCerrarSesion);
 
-        // Creamos el repositorio para poder consultar la base de datos
+        // Creamos el repositorio para consultar la BD
         usuarioRepository = new UsuarioRepository(getApplication());
 
-        // Cogemos el id del usuario que nos pasó LoginActivity
+        // Recuperamos el id del usuario que nos pasó LoginActivity con putExtra
         int idUsuario = getIntent().getIntExtra("id_usuario", -1);
 
-        // Buscamos el usuario en la base de datos por su id
+        // Buscamos el usuario en la BD por su id para obtener nombre y rol
         usuarioRepository.getUsuarioById(idUsuario).observe(this, new Observer<Usuario>() {
             @Override
             public void onChanged(Usuario usuario) {
                 if (usuario != null) {
-                    // Mostramos el nombre del usuario en el título de bienvenida
+
+                    // Mostramos el nombre real del usuario en el saludo
                     tvBienvenida.setText("Bienvenido, " + usuario.getNombre());
 
-                    // Si el rol es Administrador mostramos el botón de Gestión de Usuarios
-                    // Si es Gerente o Trabajador lo ocultamos
+                    // Guardamos el rol en la variable de clase para usarlo en los botones
+                    rolUsuario = usuario.getRol();
+
+                    // Solo el Administrador puede ver y acceder a Gestión de Usuarios
                     if (usuario.getRol().equals("Administrador")) {
-                        btnGestionUsuarios.setVisibility(View.VISIBLE);
+                        btnGestionUsuarios.setVisibility(View.VISIBLE); // lo mostramos
                     } else {
-                        btnGestionUsuarios.setVisibility(View.GONE);
+                        btnGestionUsuarios.setVisibility(View.GONE);    // lo ocultamos completamente
                     }
                 }
             }
         });
 
-        // Botón Gastos → navega a RegistrarGastoActivity
+        // Botón Gastos → abre RegistrarGastoActivity pasando el id del usuario
         btnGastos.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MenuActivity.this, RegistrarGastoActivity.class);
-                intent.putExtra("id_usuario", idUsuario);
+                intent.putExtra("id_usuario", idUsuario); // necesario para saber quién registra
                 startActivity(intent);
             }
         });
 
-        // Botón Ingresos → navega a RegistrarIngresoActivity
+        // Botón Ingresos → abre RegistrarIngresoActivity pasando el id del usuario
         btnIngresos.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -93,17 +101,19 @@ public class MenuActivity extends AppCompatActivity {
             }
         });
 
-        // Botón Informes → navega a InformesActivity
+        // Botón Informes → abre InformesActivity pasando id y rol del usuario
+        // El rol es necesario para controlar quién puede eliminar movimientos
         btnInformes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MenuActivity.this, InformesActivity.class);
                 intent.putExtra("id_usuario", idUsuario);
+                intent.putExtra("rol_usuario", rolUsuario); // necesario para control de permisos
                 startActivity(intent);
             }
         });
 
-        // Botón Gestión de Usuarios → navega a GestionUsuariosActivity
+        // Botón Gestión de Usuarios → abre GestionUsuariosActivity (solo Administrador lo ve)
         btnGestionUsuarios.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -113,15 +123,16 @@ public class MenuActivity extends AppCompatActivity {
             }
         });
 
-        // Botón Cerrar Sesión → vuelve al login y cierra todas las pantallas anteriores
+        // Botón Cerrar Sesión → vuelve al login cerrando todas las pantallas abiertas
         btnCerrarSesion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MenuActivity.this, LoginActivity.class);
-                // FLAG_ACTIVITY_CLEAR_TOP cierra todas las Activities abiertas excepto LoginActivity
+                // FLAG_ACTIVITY_CLEAR_TOP cierra todas las Activities de la pila excepto LoginActivity
+                // FLAG_ACTIVITY_NEW_TASK garantiza que LoginActivity se crea como nueva tarea
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
-                finish();
+                finish(); // cerramos también MenuActivity
             }
         });
     }

@@ -1,131 +1,235 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    LinearLayout raíz con orientación vertical.
+    Misma estructura que activity_registrar_ingreso.xml:
+    ScrollView (contenido) + barra inferior fija.
+-->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="32dp"
     android:background="#FFFFFF">
 
-    <!-- Título de la pantalla -->
-    <TextView
-        android:id="@+id/tvTitulo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Registrar Gasto"
-        android:textSize="28sp"
-        android:textStyle="bold"
-        android:textColor="#2C3E50"
-        android:layout_marginBottom="32dp"/>
-
-    <!-- Campo importe -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Importe (€)"
-        android:textSize="16sp"
-        android:textColor="#2C3E50"/>
-
-    <EditText
-        android:id="@+id/etImporte"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="0.00"
-        android:inputType="numberDecimal"
-        android:minHeight="48dp"
-        android:layout_marginBottom="16dp"/>
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
-    <!-- Campo fecha -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Fecha"
-        android:textSize="16sp"
-        android:textColor="#2C3E50"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="24dp">
 
-    <EditText
-        android:id="@+id/etFecha"
+            <!-- Título de la pantalla -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Registrar Gasto"
+                android:textSize="28sp"
+                android:textStyle="bold"
+                android:textColor="#2C3E50"
+                android:layout_marginBottom="24dp"/>
+
+            <!-- Etiqueta fecha -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Fecha"
+                android:textSize="16sp"
+                android:textColor="#2C3E50"
+                android:layout_marginBottom="4dp"/>
+
+            <!-- Campo fecha — el Java desactiva edición manual y abre DatePickerDialog al pulsar -->
+            <EditText
+                android:id="@+id/etFecha"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:layout_marginBottom="16dp"/>
+
+            <!-- Etiqueta importe -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Importe (€)"
+                android:textSize="16sp"
+                android:textColor="#2C3E50"
+                android:layout_marginBottom="4dp"/>
+
+            <!-- Campo importe con teclado numérico decimal -->
+            <EditText
+                android:id="@+id/etImporte"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="0.00"
+                android:inputType="numberDecimal"
+                android:minHeight="48dp"
+                android:layout_marginBottom="24dp"/>
+
+            <!-- Etiqueta categoría -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Categoría"
+                android:textSize="16sp"
+                android:textColor="#2C3E50"
+                android:layout_marginBottom="8dp"/>
+
+            <!--
+                GridLayout con 6 botones de categoría en 3 columnas.
+                columnCount="3" → 3 botones por fila.
+                layout_columnWeight="1" en cada botón → todos tienen el mismo ancho.
+                backgroundTint="#CCCCCC" → gris por defecto.
+                El Java pone en azul el seleccionado y en gris los demás.
+            -->
+            <GridLayout
+                android:id="@+id/gridCategorias"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:columnCount="3"
+                android:layout_marginBottom="16dp">
+
+                <Button android:id="@+id/btnCatArticulos"
+                    android:layout_width="0dp" android:layout_height="64dp"
+                    android:layout_columnWeight="1" android:layout_margin="4dp"
+                    android:text="Artículos" android:textSize="12sp"
+                    android:backgroundTint="#CCCCCC"/>
+
+                <Button android:id="@+id/btnCatServicios"
+                    android:layout_width="0dp" android:layout_height="64dp"
+                    android:layout_columnWeight="1" android:layout_margin="4dp"
+                    android:text="Servicios" android:textSize="12sp"
+                    android:backgroundTint="#CCCCCC"/>
+
+                <Button android:id="@+id/btnCatImpuestos"
+                    android:layout_width="0dp" android:layout_height="64dp"
+                    android:layout_columnWeight="1" android:layout_margin="4dp"
+                    android:text="Impuestos" android:textSize="12sp"
+                    android:backgroundTint="#CCCCCC"/>
+
+                <Button android:id="@+id/btnCatSalarios"
+                    android:layout_width="0dp" android:layout_height="64dp"
+                    android:layout_columnWeight="1" android:layout_margin="4dp"
+                    android:text="Salarios" android:textSize="12sp"
+                    android:backgroundTint="#CCCCCC"/>
+
+                <Button android:id="@+id/btnCatVehiculos"
+                    android:layout_width="0dp" android:layout_height="64dp"
+                    android:layout_columnWeight="1" android:layout_margin="4dp"
+                    android:text="Vehículos" android:textSize="12sp"
+                    android:backgroundTint="#CCCCCC"/>
+
+                <Button android:id="@+id/btnCatOtros"
+                    android:layout_width="0dp" android:layout_height="64dp"
+                    android:layout_columnWeight="1" android:layout_margin="4dp"
+                    android:text="Otros" android:textSize="12sp"
+                    android:backgroundTint="#CCCCCC"/>
+
+            </GridLayout>
+
+            <!--
+                Etiqueta subcategoría — oculta por defecto (visibility="gone").
+                El Java la muestra cuando se selecciona una categoría con subcategorías.
+                Impuestos y Salarios no tienen subcategorías — nunca se muestra para ellas.
+            -->
+            <TextView
+                android:id="@+id/tvLabelSubcategoria"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Subcategoría"
+                android:textSize="16sp"
+                android:textColor="#2C3E50"
+                android:layout_marginBottom="8dp"
+                android:visibility="gone"/>
+
+            <!--
+                GridLayout de subcategorías — oculto por defecto (visibility="gone").
+                El Java lo rellena dinámicamente con botones cargados desde la BD
+                cuando el usuario selecciona una categoría que tiene subcategorías.
+                columnCount="3" definido en el XML pero los botones se crean en Java.
+            -->
+            <GridLayout
+                android:id="@+id/gridSubcategorias"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:columnCount="3"
+                android:layout_marginBottom="16dp"
+                android:visibility="gone"/>
+
+            <!-- Etiqueta descripción -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Notas"
+                android:textSize="16sp"
+                android:textColor="#2C3E50"
+                android:layout_marginBottom="4dp"/>
+
+            <!--
+                Campo descripción — siempre visible.
+                Obligatorio si se selecciona Otros en categoría o subcategoría.
+                Opcional para el resto de categorías.
+            -->
+            <EditText
+                android:id="@+id/etNotas"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Descripción del gasto"
+                android:inputType="text"
+                android:minHeight="48dp"
+                android:layout_marginBottom="24dp"/>
+
+            <!-- Botón guardar gasto -->
+            <Button
+                android:id="@+id/btnGuardarGasto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Guardar Gasto"
+                android:textSize="18sp"
+                android:minHeight="64dp"
+                android:layout_marginBottom="8dp"/>
+
+            <!--
+                Mensaje de confirmación o error.
+                visibility="gone" → invisible hasta que el Java lo muestre.
+            -->
+            <TextView
+                android:id="@+id/tvMensaje"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:visibility="gone"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Barra inferior de navegación — fija, fuera del ScrollView -->
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="2026-03-17"
-        android:inputType="date"
-        android:minHeight="48dp"
-        android:layout_marginBottom="16dp"/>
+        android:layout_height="64dp"
+        android:orientation="horizontal"
+        android:background="#F0F0F0"
+        android:gravity="center">
 
-    <!-- Campo descripción -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Descripción"
-        android:textSize="16sp"
-        android:textColor="#2C3E50"/>
+        <ImageButton android:id="@+id/iconoHome"
+            android:layout_width="0dp" android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@android:drawable/ic_menu_compass"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Ir al menú principal"
+            android:scaleType="center"/>
 
-    <EditText
-        android:id="@+id/etDescripcion"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Descripción del gasto"
-        android:inputType="text"
-        android:minHeight="48dp"
-        android:layout_marginBottom="16dp"/>
+        <ImageButton android:id="@+id/iconoInformes"
+            android:layout_width="0dp" android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@android:drawable/ic_menu_sort_by_size"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Ir a informes"
+            android:scaleType="center"/>
 
-    <!-- Selector de categoría -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Categoría"
-        android:textSize="16sp"
-        android:textColor="#2C3E50"/>
-
-    <!-- Spinner es un desplegable para seleccionar una opción de una lista -->
-    <Spinner
-        android:id="@+id/spinnerCategoria"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="48dp"
-        android:layout_marginBottom="16dp"/>
-
-    <!-- Selector de subcategoría, se carga según la categoría seleccionada -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Subcategoría"
-        android:textSize="16sp"
-        android:textColor="#2C3E50"/>
-
-    <Spinner
-        android:id="@+id/spinnerSubcategoria"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="48dp"
-        android:layout_marginBottom="32dp"/>
-
-    <!-- Botón guardar -->
-    <Button
-        android:id="@+id/btnGuardarGasto"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Guardar Gasto"
-        android:textSize="18sp"
-        android:minHeight="64dp"
-        android:layout_marginBottom="16dp"/>
-
-    <!-- Botón volver al menú -->
-    <Button
-        android:id="@+id/btnVolver"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Volver"
-        android:textSize="18sp"
-        android:minHeight="64dp"/>
-
-    <!-- Mensaje de confirmación o error -->
-    <TextView
-        android:id="@+id/tvMensaje"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="16sp"
-        android:layout_marginTop="16dp"
-        android:visibility="gone"/>
+    </LinearLayout>
 
 </LinearLayout>

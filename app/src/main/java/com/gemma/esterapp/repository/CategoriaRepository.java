@@ -23,11 +23,7 @@ public class CategoriaRepository {
     // Hilo secundario para operaciones de escritura (insert, update, delete)
     private final ExecutorService executorService;
 
-    /**
-     * CONSTRUCTOR
-     * Obtiene la instancia única de la base de datos (Singleton)
-     * y prepara el hilo secundario.
-     */
+    // CONSTRUCTOR — obtiene la instancia única de la BD y prepara el hilo secundario
     public CategoriaRepository(Application application) {
         AppDatabase db = AppDatabase.getInstance(application);
         categoriaDAO = db.categoriaDAO();
@@ -38,18 +34,18 @@ public class CategoriaRepository {
     // OPERACIONES DE ESCRITURA (hilo secundario)
     // ─────────────────────────────────────────────
 
-    // Inserta una categoria nueva en la base de datos
+    // Inserta una categoría nueva en la base de datos
     public void insert(Categoria categoria) {
         executorService.execute(() -> categoriaDAO.insert(categoria));
     }
 
-    // Actualiza una categoria existente en la base de datos
+    // Actualiza una categoría existente en la base de datos
     public void update(Categoria categoria) {
         executorService.execute(() -> categoriaDAO.update(categoria));
     }
 
-    // Elimina una categoria de la base de datos
-    //***OJO***: Si la categoria tiene subcategorias asociadas, Room no la borrará (decisión de diseño con RESTRICT)
+    // Elimina una categoría de la base de datos
+    // OJO: RESTRICT — fallará si la categoría tiene subcategorías o gastos asociados
     public void delete(Categoria categoria) {
         executorService.execute(() -> categoriaDAO.delete(categoria));
     }
@@ -58,12 +54,12 @@ public class CategoriaRepository {
     // OPERACIONES DE LECTURA (devuelven LiveData)
     // ─────────────────────────────────────────────
 
-    // Devuelve todas las categorias. La pantalla se actualiza sola si cambia algo
+    // Devuelve todas las categorías — usado en InformesActivity para el mapa de nombres
     public LiveData<List<Categoria>> getAllCategorias() {
         return categoriaDAO.getAllCategorias();
     }
 
-    // Devuelve una categoria por su id
+    // Devuelve una categoría por su id
     public LiveData<Categoria> getCategoriaById(int id) {
         return categoriaDAO.getCategoriaById(id);
     }

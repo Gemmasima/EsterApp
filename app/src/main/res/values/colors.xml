@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    colors.xml — define los colores globales de la app.
+    Solo tiene black y white porque los colores principales de la app
+    (azul #0288D1, rojo #E74C3C, verde #27AE60) se definen directamente
+    en los layouts XML y en el Java con valores hexadecimales,
+    y los colores del tema (colorPrimary, colorSecondary) se definen en themes.xml.
+-->
 <resources>
+    <!-- Negro puro — usado como color base del sistema -->
     <color name="black">#FF000000</color>
+
+    <!-- Blanco puro — usado como color base del sistema -->
     <color name="white">#FFFFFFFF</color>
 </resources>

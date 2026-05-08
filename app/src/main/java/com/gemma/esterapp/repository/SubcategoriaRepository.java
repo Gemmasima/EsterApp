@@ -23,11 +23,7 @@ public class SubcategoriaRepository {
     // Hilo secundario para operaciones de escritura (insert, update, delete)
     private final ExecutorService executorService;
 
-    /**
-     * CONSTRUCTOR
-     * Obtiene la instancia única de la base de datos (Singleton)
-     * y prepara el hilo secundario.
-     */
+    // CONSTRUCTOR — obtiene la instancia única de la BD y prepara el hilo secundario
     public SubcategoriaRepository(Application application) {
         AppDatabase db = AppDatabase.getInstance(application);
         subcategoriaDAO = db.subcategoriaDAO();
@@ -38,17 +34,18 @@ public class SubcategoriaRepository {
     // OPERACIONES DE ESCRITURA (hilo secundario)
     // ─────────────────────────────────────────────
 
-    // Inserta una subcategoria nueva en la base de datos
+    // Inserta una subcategoría nueva en la base de datos
     public void insert(Subcategoria subcategoria) {
         executorService.execute(() -> subcategoriaDAO.insert(subcategoria));
     }
 
-    // Actualiza una subcategoria existente en la base de datos
+    // Actualiza una subcategoría existente en la base de datos
     public void update(Subcategoria subcategoria) {
         executorService.execute(() -> subcategoriaDAO.update(subcategoria));
     }
 
-    // Elimina una subcategoria de la base de datos
+    // Elimina una subcategoría de la base de datos
+    // OJO: RESTRICT — fallará si la subcategoría tiene gastos asociados
     public void delete(Subcategoria subcategoria) {
         executorService.execute(() -> subcategoriaDAO.delete(subcategoria));
     }
@@ -57,18 +54,19 @@ public class SubcategoriaRepository {
     // OPERACIONES DE LECTURA (devuelven LiveData)
     // ─────────────────────────────────────────────
 
-    // Devuelve todas las subcategorias. La pantalla se actualiza sola si cambia algo
+    // Devuelve todas las subcategorías — usado en InformesActivity para el mapa de nombres
     public LiveData<List<Subcategoria>> getAllSubcategorias() {
         return subcategoriaDAO.getAllSubcategorias();
     }
 
-    // Devuelve las subcategorias de una categoria concreta
-    // Se usa cuando el usuario selecciona una categoria en el formulario de gastos
+    // Devuelve las subcategorías de una categoría concreta
+    // Usado en RegistrarGastoActivity para mostrar los botones de subcategoría
+    // cuando el usuario selecciona una categoría
     public LiveData<List<Subcategoria>> getSubcategoriasByCategoria(int idCategoria) {
         return subcategoriaDAO.getSubcategoriasByCategoria(idCategoria);
     }
 
-    // Devuelve una subcategoria por su id
+    // Devuelve una subcategoría por su id
     public LiveData<Subcategoria> getSubcategoriaById(int id) {
         return subcategoriaDAO.getSubcategoriaById(id);
     }

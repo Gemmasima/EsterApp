@@ -1,44 +1,78 @@
+// build.gradle — archivo de configuración del módulo app.
+// Define cómo se compila la app, qué versión de Android requiere
+// y qué librerías externas usa.
+
 plugins {
+    // Plugin de Android para aplicaciones — permite compilar APKs
     alias(libs.plugins.android.application)
 }
 
 android {
+    // Paquete base de la app — debe coincidir exactamente con el de todas las clases Java
     namespace 'com.gemma.esterapp'
+
+    // Versión del SDK de Android con la que se compila (la más reciente disponible)
     compileSdk {
         version = release(36)
     }
 
     defaultConfig {
+        // Identificador único de la app en Google Play y en el dispositivo
         applicationId "com.gemma.esterapp"
+
+        // Versión mínima de Android que puede instalar la app
+        // API 26 = Android 8.0 Oreo — la tablet Honor ELN-W09 tiene Android 13 (API 33)
         minSdk 26
+
+        // Versión de Android para la que está optimizada la app
         targetSdk 36
+
+        // Número de versión interno (entero) — se incrementa con cada actualización
         versionCode 1
+
+        // Versión visible para el usuario
         versionName "1.0"
 
+        // Runner para los tests de instrumentación (tests en dispositivo real)
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         release {
+            // minifyEnabled=false → no se ofusca ni minimiza el código en release
+            // En producción real se activaría para reducir el tamaño del APK
             minifyEnabled false
+
+            // Reglas de ProGuard para ofuscación (no se usan porque minifyEnabled=false)
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
     compileOptions {
+        // Java 11 — versión de Java usada para compilar el código fuente
+        // Permite usar lambdas, streams y otras características modernas de Java
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
     }
 }
 
 dependencies {
-    implementation libs.appcompat
-    implementation libs.material
-    implementation libs.activity
-    implementation libs.constraintlayout
-    //ROOM para SQLite
+    // Librerías de AndroidX — compatibilidad con versiones antiguas de Android
+    implementation libs.appcompat        // soporte para ActionBar y temas en versiones antiguas
+    implementation libs.material         // componentes Material Design (MaterialDatePicker, etc.)
+    implementation libs.activity         // soporte para Activity y sus ciclos de vida
+    implementation libs.constraintlayout // layout con restricciones (no se usa en esta app)
+
+    // Room — ORM oficial de Android para SQLite
+    // room-runtime: la librería principal que gestiona la BD
     implementation "androidx.room:room-runtime:2.6.1"
+
+    // room-compiler: procesador de anotaciones que genera el código SQL automáticamente
+    // annotationProcessor en lugar de kapt porque el proyecto usa Java, no Kotlin
     annotationProcessor "androidx.room:room-compiler:2.6.1"
-    testImplementation libs.junit
-    androidTestImplementation libs.ext.junit
-    androidTestImplementation libs.espresso.core
+
+    // Librerías de testing — solo se usan para ejecutar tests, no se incluyen en el APK
+    testImplementation libs.junit                    // tests unitarios locales
+    androidTestImplementation libs.ext.junit         // tests de instrumentación
+    androidTestImplementation libs.espresso.core     // tests de UI en dispositivo real
 }

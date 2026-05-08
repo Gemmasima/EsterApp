@@ -1,19 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?><!--
-   Sample data extraction rules file; uncomment and customize as necessary.
-   See https://developer.android.com/about/versions/12/backup-restore#xml-changes
-   for details.
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    data_extraction_rules.xml — define qué datos de la app se incluyen
+    en las copias de seguridad en la nube (Android 12+).
+    Referenciado en AndroidManifest.xml con android:dataExtractionRules.
+    En este proyecto está vacío — Android hará copia de seguridad
+    de todos los datos por defecto.
+    Si en el futuro se quisiera excluir la base de datos SQLite de las copias
+    de seguridad (para proteger datos sensibles), se añadiría aquí.
 -->
 <data-extraction-rules>
     <cloud-backup>
-        <!-- TODO: Use <include> and <exclude> to control what is backed up.
-        <include .../>
-        <exclude .../>
-        -->
+        <!-- Sin reglas: Android hace copia de seguridad de todo por defecto -->
     </cloud-backup>
-    <!--
-    <device-transfer>
-        <include .../>
-        <exclude .../>
-    </device-transfer>
-    -->
 </data-extraction-rules>

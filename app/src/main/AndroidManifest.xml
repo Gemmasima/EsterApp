@@ -1,7 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    AndroidManifest.xml — el archivo más importante del proyecto Android.
+    Es el "carnet de identidad" de la app: declara todas las Activities,
+    permisos, proveedores y configuración general.
+    Android lo lee antes de ejecutar la app.
+-->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!--
+        Bloque <application> — configuración general de la app.
+        allowBackup=true → Android puede hacer copia de seguridad de los datos.
+        icon → icono de la app en el launcher (pantalla de inicio del dispositivo).
+        label → nombre de la app que aparece debajo del icono (@string/app_name).
+        theme → tema visual de toda la app (@style/Theme.EsterApp).
+        supportsRtl=true → soporte para idiomas de derecha a izquierda (árabe, hebreo...).
+    -->
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -11,7 +26,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.EsterApp">
-        <!-- LoginActivity es la pantalla de inicio de la app -->
+
+        <!--
+            LoginActivity — punto de entrada de la app.
+            exported=true → necesario para Activities que tienen intent-filter LAUNCHER.
+            intent-filter con MAIN + LAUNCHER → esta Activity es la que Android abre
+            cuando el usuario pulsa el icono de la app en el launcher.
+        -->
         <activity
             android:name=".ui.LoginActivity"
             android:exported="true">
@@ -20,34 +41,60 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <!-- MainActivity declarada pero ya no es la pantalla de inicio -->
+
+        <!--
+            MainActivity — generada automáticamente por Android Studio al crear el proyecto.
+            exported=false → no se puede abrir desde fuera de la app.
+            No tiene intent-filter LAUNCHER porque ya no es el punto de entrada.
+            Se mantiene en el Manifest pero no se usa en la app.
+        -->
         <activity
             android:name=".MainActivity"
             android:exported="false"/>
-        <!-- MenuActivity es la pantalla principal después del login -->
-        <activity
-            android:name=".ui.MenuActivity"
-            android:exported="false"/>
-        <!-- Pantalla para registrar gastos -->
-        <activity
-            android:name=".ui.RegistrarGastoActivity"
-            android:exported="false"/>
 
-        <!-- Pantalla para registrar ingresos -->
-        <activity
-            android:name=".ui.RegistrarIngresoActivity"
-            android:exported="false"/>
+        <!--
+            El resto de Activities tienen exported=false → solo se pueden abrir
+            desde dentro de la propia app con Intent. No son accesibles desde fuera.
+            Todas las Activities de la app deben declararse aquí obligatoriamente.
+            Si una Activity no está declarada Android lanzará una excepción al abrirla.
+        -->
 
-        <!-- Pantalla de informes -->
-        <activity
-            android:name=".ui.InformesActivity"
-            android:exported="false"/>
+        <!-- Hub de navegación principal después del login -->
+        <activity android:name=".ui.MenuActivity" android:exported="false"/>
 
-        <!-- Pantalla de gestión de usuarios, solo para Administrador -->
-        <activity
-            android:name=".ui.GestionUsuariosActivity"
-            android:exported="false"/>
+        <!-- Formulario de registro de gastos -->
+        <activity android:name=".ui.RegistrarGastoActivity" android:exported="false"/>
 
+        <!-- Formulario de registro de ingresos -->
+        <activity android:name=".ui.RegistrarIngresoActivity" android:exported="false"/>
+
+        <!-- Pantalla de informes y lista de movimientos -->
+        <activity android:name=".ui.InformesActivity" android:exported="false"/>
+
+        <!-- Gestión de usuarios — solo accesible para el Administrador -->
+        <activity android:name=".ui.GestionUsuariosActivity" android:exported="false"/>
+
+        <!-- Pantalla para generar CSV — accesible para Admin y Gerente -->
+        <activity android:name=".ui.GenerarInformeActivity"/>
+
+        <!--
+            FileProvider — necesario para compartir archivos CSV con otras apps.
+            A partir de Android 7 (API 24) no se pueden compartir archivos con rutas
+            directas (file://) por seguridad. FileProvider genera URIs seguras (content://).
+            authorities="${applicationId}.fileprovider" → identificador único del provider.
+            exported=false → no es accesible desde fuera de la app directamente.
+            grantUriPermissions=true → permite dar permiso temporal de lectura al destinatario.
+            meta-data → apunta a res/xml/file_paths.xml que define qué carpetas se pueden compartir.
+        -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"/>
+        </provider>
 
     </application>
 

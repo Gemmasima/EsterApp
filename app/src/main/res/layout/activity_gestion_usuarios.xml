@@ -1,137 +1,182 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+
+<!--
+    LinearLayout raíz vertical.
+    Estructura: ScrollView (lista + formulario + botones) + barra inferior fija.
+-->
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="#FFFFFF">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="24dp">
+
+            <!-- Título de la pantalla -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Gestión de usuarios"
+                android:textSize="28sp"
+                android:textStyle="bold"
+                android:textColor="#2C3E50"
+                android:layout_marginBottom="16dp"/>
+
+            <!-- Etiqueta de la lista -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Usuarios registrados"
+                android:textSize="14sp"
+                android:textColor="#888888"
+                android:layout_marginBottom="8dp"/>
+
+            <!--
+                ListView de usuarios con altura fija de 280dp.
+                Al pulsar una fila el Java la resalta en verde y activa el botón Eliminar.
+                La altura fija es necesaria porque está dentro de un ScrollView —
+                si fuera wrap_content o match_parent no se vería bien.
+            -->
+            <ListView
+                android:id="@+id/listViewUsuarios"
+                android:layout_width="match_parent"
+                android:layout_height="280dp"
+                android:layout_marginBottom="16dp"
+                android:divider="@android:color/darker_gray"
+                android:dividerHeight="0.5dp"/>
+
+            <!--
+                Mensaje de confirmación o error.
+                visibility="gone" → no ocupa espacio hasta que el Java lo muestre.
+            -->
+            <TextView
+                android:id="@+id/tvMensaje"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:layout_marginBottom="16dp"
+                android:visibility="gone"/>
+
+            <!--
+                Formulario de creación de usuario — oculto por defecto (visibility="gone").
+                El Java lo muestra al pulsar "Crear nuevo usuario".
+                background="#F8F8F8" → fondo gris muy claro para distinguirlo visualmente.
+                El rol siempre es Trabajador — se muestra como texto informativo, no editable.
+            -->
+            <LinearLayout
+                android:id="@+id/layoutFormulario"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="#F8F8F8"
+                android:padding="16dp"
+                android:layout_marginBottom="16dp"
+                android:visibility="gone">
+
+                <TextView android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Nuevo usuario" android:textSize="16sp"
+                    android:textStyle="bold" android:textColor="#2C3E50"
+                    android:layout_marginBottom="12dp"/>
+
+                <TextView android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Nombre de usuario" android:textSize="13sp"
+                    android:textColor="#888888" android:layout_marginBottom="4dp"/>
+
+                <EditText android:id="@+id/etUsuario"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:hint="Ej: mario" android:inputType="text"
+                    android:minHeight="48dp" android:layout_marginBottom="12dp"/>
+
+                <TextView android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Contraseña" android:textSize="13sp"
+                    android:textColor="#888888" android:layout_marginBottom="4dp"/>
+
+                <EditText android:id="@+id/etContrasena"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:hint="Contraseña" android:inputType="textPassword"
+                    android:minHeight="48dp" android:layout_marginBottom="8dp"/>
+
+                <!--
+                    Texto informativo — el rol siempre es Trabajador.
+                    No es un Spinner ni un EditText — no se puede cambiar desde aquí.
+                -->
+                <TextView android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Rol: Trabajador" android:textSize="12sp"
+                    android:textColor="#AAAAAA"/>
+
+            </LinearLayout>
+
+            <!--
+                Botón Crear / Guardar.
+                backgroundTint="#0288D1" → azul fijo siempre.
+                El Java cambia el texto entre "Crear nuevo usuario" y "Guardar usuario"
+                dependiendo de si el formulario está visible o no.
+            -->
+            <Button
+                android:id="@+id/btnCrearUsuario"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Crear nuevo usuario"
+                android:textSize="16sp"
+                android:minHeight="56dp"
+                android:layout_marginBottom="8dp"
+                android:backgroundTint="#0288D1"/>
+
+            <!--
+                Botón Eliminar.
+                backgroundTint="#CCCCCC" → gris por defecto (inactivo).
+                El Java lo pone azul (#0288D1) cuando hay un usuario seleccionado.
+            -->
+            <Button
+                android:id="@+id/btnEliminarUsuario"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Eliminar usuario"
+                android:textSize="16sp"
+                android:minHeight="56dp"
+                android:backgroundTint="#CCCCCC"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Barra inferior de navegación — fija -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="32dp">
+        android:layout_height="64dp"
+        android:orientation="horizontal"
+        android:background="#F0F0F0"
+        android:gravity="center">
 
-        <!-- Título de la pantalla -->
-        <TextView
-            android:id="@+id/tvTitulo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Gestión de Usuarios"
-            android:textSize="28sp"
-            android:textStyle="bold"
-            android:textColor="#2C3E50"
-            android:layout_marginBottom="32dp"/>
+        <ImageButton android:id="@+id/iconoHome"
+            android:layout_width="0dp" android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@android:drawable/ic_menu_compass"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Ir al menú principal"
+            android:scaleType="center"/>
 
-        <!-- ── CREAR / EDITAR USUARIO ── -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Crear / Editar usuario"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="#2C3E50"
-            android:layout_marginBottom="8dp"/>
-
-        <!-- Campo nombre completo -->
-        <EditText
-            android:id="@+id/etNombre"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Nombre completo"
-            android:inputType="textPersonName"
-            android:minHeight="48dp"
-            android:layout_marginBottom="8dp"/>
-
-        <!-- Campo nombre de usuario -->
-        <EditText
-            android:id="@+id/etUsuario"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Nombre de usuario"
-            android:inputType="text"
-            android:minHeight="48dp"
-            android:layout_marginBottom="8dp"/>
-
-        <!-- Campo contraseña -->
-        <EditText
-            android:id="@+id/etContrasena"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Contraseña"
-            android:inputType="textPassword"
-            android:minHeight="48dp"
-            android:layout_marginBottom="8dp"/>
-
-        <!-- Selector de rol -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Rol"
-            android:textSize="16sp"
-            android:textColor="#2C3E50"/>
-
-        <!-- Spinner con los roles disponibles -->
-        <Spinner
-            android:id="@+id/spinnerRol"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="48dp"
-            android:layout_marginBottom="16dp"/>
-
-        <!-- Botón guardar usuario nuevo o editado -->
-        <Button
-            android:id="@+id/btnGuardarUsuario"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Guardar Usuario"
-            android:textSize="18sp"
-            android:minHeight="56dp"
-            android:layout_marginBottom="8dp"/>
-
-        <!-- Mensaje de confirmación o error -->
-        <TextView
-            android:id="@+id/tvMensaje"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:layout_marginBottom="24dp"
-            android:visibility="gone"/>
-
-        <!-- ── LISTA DE USUARIOS ── -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Usuarios registrados"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="#2C3E50"
-            android:layout_marginBottom="8dp"/>
-
-        <!-- ListView muestra la lista de usuarios de la base de datos -->
-        <ListView
-            android:id="@+id/listViewUsuarios"
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:layout_marginBottom="24dp"/>
-
-        <!-- Botón eliminar usuario seleccionado de la lista -->
-        <Button
-            android:id="@+id/btnEliminarUsuario"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Eliminar Usuario Seleccionado"
-            android:textSize="18sp"
-            android:minHeight="56dp"
-            android:layout_marginBottom="16dp"/>
-
-        <!-- Botón volver al menú -->
-        <Button
-            android:id="@+id/btnVolver"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Volver"
-            android:textSize="18sp"
-            android:minHeight="64dp"/>
+        <ImageButton android:id="@+id/iconoInformes"
+            android:layout_width="0dp" android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@android:drawable/ic_menu_sort_by_size"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Ir a informes"
+            android:scaleType="center"/>
 
     </LinearLayout>
-</ScrollView>
+
+</LinearLayout>

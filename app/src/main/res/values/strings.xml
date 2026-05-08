@@ -1,3 +1,10 @@
 <resources>
+    <!--
+        app_name — nombre de la app que aparece en el launcher del dispositivo
+        y en la barra superior. Referenciado en AndroidManifest.xml con @string/app_name.
+        Se llama EsterApp porque es el nombre interno del proyecto.
+        En la pantalla de login se muestra "Gazzola SHOP" directamente en el XML
+        del layout, no desde aquí.
+    -->
     <string name="app_name">EsterApp</string>
 </resources>

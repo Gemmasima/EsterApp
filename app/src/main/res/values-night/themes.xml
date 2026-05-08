@@ -1,7 +1,21 @@
+<!--
+    themes.xml (values-night) — tema visual para el modo oscuro.
+    Android lo aplica automáticamente cuando el dispositivo tiene
+    el modo oscuro activado en los ajustes del sistema.
+    En este proyecto el tema oscuro no está personalizado —
+    hereda todos los colores del tema base sin cambios.
+-->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+
+    <!--
+        Base.Theme.EsterApp en modo oscuro.
+        Por ahora hereda el mismo tema base sin personalización.
+        Si en el futuro se quiere un tema oscuro diferente,
+        se descomenta y se añaden los colores aquí.
+    -->
     <style name="Base.Theme.EsterApp" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
+        <!-- Personalización del tema oscuro pendiente -->
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
     </style>
+
 </resources>

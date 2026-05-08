@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    file_paths.xml — define qué carpetas del dispositivo puede compartir el FileProvider.
+    Sin este archivo el FileProvider no sabe qué rutas están permitidas
+    y lanzaría una excepción al intentar compartir el CSV.
+    Está referenciado desde el AndroidManifest.xml en el bloque provider.
+-->
+<paths>
+    <!--
+        external-files-path → carpeta específica de la app en el almacenamiento externo.
+        Equivale a: getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)
+        que en Java usamos en compartirCSV() de GenerarInformeActivity.
+        name="documents" → nombre interno del path para el FileProvider.
+        path="Documents/" → subcarpeta donde se guardan los archivos CSV generados.
+        Solo se pueden compartir archivos de esta carpeta — ninguna otra.
+    -->
+    <external-files-path
+        name="documents"
+        path="Documents/"/>
+</paths>
