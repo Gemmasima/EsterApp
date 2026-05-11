@@ -73,8 +73,8 @@ public abstract class AppDatabase extends RoomDatabase { // abstract porque Room
                             AppDatabase.class,              // clase que define la estructura de la BD
                             DB_NAME)                        // nombre del archivo fisico en la tablet
 
-                    // Si la version cambia, Room borra y recrea la BD automaticamente
-                    .fallbackToDestructiveMigration()
+                    //Registra la migraciÓn de la versión 2 a versión 3.
+                    .addMigrations(MIGRATION_2a3)
 
                     /* Registra DatosIniciales
                        DatosIniciales.onCreate() se ejecutara cuando la BD se cree por primera vez */
