@@ -39,6 +39,7 @@ public class DatosIniciales extends RoomDatabase.Callback {
         db.execSQL("INSERT INTO categorias (nombre) VALUES ('Impuestos')");                 // id=3 — sin subcategorias
         db.execSQL("INSERT INTO categorias (nombre) VALUES ('Salarios')");                  // id=4 — sin subcategorias
         db.execSQL("INSERT INTO categorias (nombre) VALUES ('Vehiculos')");                 // id=5 — gastos de los vehiculos del negocio
+        db.execSQL("INSERT INTO categorias (nombre) VALUES ('Otros')");                     // id=6 - otros
 
         // ---- SUBCATEGORIAS de Proveedores de materiales (id_categoria = 1) ----
         // Tipos de productos que vende el negocio

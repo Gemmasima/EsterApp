@@ -79,7 +79,7 @@ public class RegistrarGastoActivity extends AppCompatActivity {
     private static final int ID_CAT_IMPUESTOS = 3;
     private static final int ID_CAT_SALARIOS  = 4;
     private static final int ID_CAT_VEHICULOS = 5;
-    private static final int ID_CAT_OTROS     = 0;
+    private static final int ID_CAT_OTROS     = 6;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -182,7 +182,7 @@ public class RegistrarGastoActivity extends AppCompatActivity {
         if (esOtros) {
             btnCatOtros.setBackgroundTintList(
                     android.content.res.ColorStateList.valueOf(0xFF0288D1));
-            idSubcategoriaSeleccionada = 0; // 0 = no aplica subcategoría
+            idSubcategoriaSeleccionada = -2; // -2 = no aplica subcategoría, evita colisión con ID_CAT_OTROS=0
             return;
         }
 

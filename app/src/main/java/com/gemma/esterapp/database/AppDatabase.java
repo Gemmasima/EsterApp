@@ -1,8 +1,12 @@
 package com.gemma.esterapp.database;
 
+import androidx.annotation.NonNull;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.migration.Migration;
+import androidx.sqlite.db.SupportSQLiteDatabase;
+
 import android.content.Context;
 
 import com.gemma.esterapp.dao.CategoriaDAO;
@@ -18,7 +22,8 @@ import com.gemma.esterapp.model.Usuario;
 
 // @Database le dice a Room que esta clase es la BASE DE DATOS principal de la app
 // entities: declara las 5 tablas que existen en la base de datos
-@Database(entities = {Usuario.class, Gasto.class, Ingreso.class, Categoria.class, Subcategoria.class}, version = 2)
+//Version 3: actualizada para añadir la categoria Otros sin borrar datos existentes
+@Database(entities = {Usuario.class, Gasto.class, Ingreso.class, Categoria.class, Subcategoria.class}, version = 3)
 public abstract class AppDatabase extends RoomDatabase { // abstract porque Room genera la implementacion automaticamente
 
     // Nombre del archivo fisico que Room crea, despues de getInstance, en el interno de la tablet.
@@ -36,6 +41,19 @@ public abstract class AppDatabase extends RoomDatabase { // abstract porque Room
     public abstract IngresoDAO ingresoDAO();       // operaciones sobre la tabla ingresos
     public abstract CategoriaDAO categoriaDAO();   // operaciones sobre la tabla categorias
     public abstract SubcategoriaDAO subcategoriaDAO(); // operaciones sobre la tabla subcategorias
+
+    /* MIGRATION DE V.2 A V.3 de la BD
+    * Añadida la categoria Otros con id=6 en la tabla de categorias sin borrar los datos existentes
+    * a diferencia del anterior metodo fallbackToDestructiveMigration(), está migración mantiene
+    * todos los datos (gasto, ingresos, usuarios*/
+
+    static final Migration MIGRATION_2a3 =new Migration(2, 3) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            //inserta la categoria Otros que faltaba en los datos iniciales.
+            database.execSQL("INSERT INTO categorias (nombre) VALUES ('Otros')");
+        }
+    };
 
     /* El metodo getInstance() garantiza que solo se cree una conexión a la base de datos. (abrir el archivo.db)
     para consultas o modificaciones. Cuando una pantalla necesita acceder a datos llama a este metodo, comprueba
