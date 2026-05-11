@@ -4,14 +4,18 @@ import androidx.annotation.NonNull;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-// DatosIniciales extiende RoomDatabase.Callback para interceptar el momento
-// en que Room crea la base de datos por primera vez
-// Solo se ejecuta UNA vez: cuando el archivo esterapp_db no existe todavia
+/* DATOS INICIALES
+    Esta clase se ejecuta automaticamente, una sola vez, cuando Room crea el archivo ester_app.db por
+    primera vez. Inserta los tres usuarios iniciales, las cinco categorías de gastos y todas sus
+    subcategorías en SQLite usando db.execSQL(), sin la ejecucion de esta clase no se puede accder a la app */
+
+/* Hereda de RoomDatabase.Callback para que Room sepa que tiene que llamarla en el momento en que
+  crea el archivo esterapp_db por primera vez en la tablet */
 public class DatosIniciales extends RoomDatabase.Callback {
 
-    // onCreate() es llamado automaticamente por Room cuando crea la BD por primera vez
-    // db: conexion directa a SQLite que Room nos pasa para poder ejecutar SQL
-    // @NonNull garantiza que db nunca sera null cuando Room llame a este metodo
+    /* Room llama a este metodo automátic cuando crea la BD por primera vez.
+    // db es la conexión directa a SQLite que Room nos pasa en ese momento para poder insertar datos
+    // @NonNull garantiza que db siempre tendrá un valor válido — Room nunca lo llamará con null */
     @Override
     public void onCreate(@NonNull SupportSQLiteDatabase db) {
         super.onCreate(db); // llamamos al metodo padre antes de hacer nada

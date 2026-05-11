@@ -10,7 +10,7 @@ import com.gemma.esterapp.model.Ingreso;
 import java.util.List;
 
 // @Dao le dice a Room que esta interfaz es un DAO
-// Room genera automáticamente el código SQL de cada método al compilar
+// Room genera automáticamente el código SQL de cada metodo al compilar
 @Dao
 public interface IngresoDAO {
 
@@ -42,8 +42,9 @@ public interface IngresoDAO {
     @Query("SELECT * FROM ingresos WHERE tipoingreso = :tipoingreso")
     LiveData<List<Ingreso>> getIngresosByTipo(String tipoingreso);
 
-    // Devuelve la suma total de ingresos de un mes concreto
-    // substr(fecha, 1, 7) extrae los primeros 7 caracteres: "2026-03"
+    /* Suma todos los ingresos del mes. substring(1,7) significa que extrae
+    * los 7 primeros de la fecha, asi filtra por mes sin importar el dia,
+    * se usa en informesActivity para mostrar el total de ingresos en verde */
     @Query("SELECT SUM(importe) FROM ingresos WHERE substr(fecha, 1, 7) = :mes")
     LiveData<Double> getTotalIngresosByMes(String mes);
 
@@ -51,17 +52,20 @@ public interface IngresoDAO {
     @Query("SELECT SUM(importe) FROM ingresos WHERE fecha = :fecha")
     LiveData<Double> getTotalIngresosByDia(String fecha);
 
-    // Devuelve la suma total de ingresos entre dos fechas
-    // BETWEEN incluye las dos fechas extremas
+    /* Suma todos los ingresos entre dos fechas BETWEEN, se usa
+     * GenerarInformesActivity para calcular el total del periodo selccionado */
     @Query("SELECT SUM(importe) FROM ingresos WHERE fecha BETWEEN :desde AND :hasta")
     LiveData<Double> getTotalIngresosByRangoFechas(String desde, String hasta);
 
-    // Devuelve todos los ingresos entre dos fechas — usado para generar el CSV
+    /* Devuelve la lista completa de ingresos entre dos fechas, a diferencia
+    * del metodo anterior, este no suma los importes, devuelve cada ingreso
+    * como una fila en el archivo CSV*/
     @Query("SELECT * FROM ingresos WHERE fecha BETWEEN :desde AND :hasta")
     LiveData<List<Ingreso>> getIngresosByRangoFechas(String desde, String hasta);
 
-    // Devuelve todos los ingresos de un mes concreto ordenados por fecha descendente
-    // Usado en InformesActivity para mostrar la lista de movimientos
+    /* Devuelve la lista de ingresos del mes ordenada DESC, utiliza el substr
+    * para filtrar por mes sin importar el dia y se usa en InformesActivity para
+    * mostrar la lista de movimientos de mes con fondo color verde */
     @Query("SELECT * FROM ingresos WHERE substr(fecha, 1, 7) = :mes ORDER BY fecha DESC")
     LiveData<List<Ingreso>> getIngresosByMes(String mes);
 }

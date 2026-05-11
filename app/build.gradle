@@ -3,7 +3,7 @@
 // y qué librerías externas usa.
 
 plugins {
-    // Plugin de Android para aplicaciones — permite compilar APKs
+    // Plugin de Android para aplicaciones — permite compilar APKs (Android Pakage Kid)
     alias(libs.plugins.android.application)
 }
 
@@ -61,7 +61,7 @@ dependencies {
     implementation libs.appcompat        // soporte para ActionBar y temas en versiones antiguas
     implementation libs.material         // componentes Material Design (MaterialDatePicker, etc.)
     implementation libs.activity         // soporte para Activity y sus ciclos de vida
-    implementation libs.constraintlayout // layout con restricciones (no se usa en esta app)
+    implementation libs.constraintlayout // layout con restricciones
 
     // Room — ORM oficial de Android para SQLite
     // room-runtime: la librería principal que gestiona la BD
@@ -71,7 +71,8 @@ dependencies {
     // annotationProcessor en lugar de kapt porque el proyecto usa Java, no Kotlin
     annotationProcessor "androidx.room:room-compiler:2.6.1"
 
-    // Librerías de testing — solo se usan para ejecutar tests, no se incluyen en el APK
+    // Librerías de testing — añadidas por defecto al crear el proyecto en Android Studio
+    // No se han utilizado: las pruebas realizadas han sido manuales sobre el dispositivo real
     testImplementation libs.junit                    // tests unitarios locales
     androidTestImplementation libs.ext.junit         // tests de instrumentación
     androidTestImplementation libs.espresso.core     // tests de UI en dispositivo real

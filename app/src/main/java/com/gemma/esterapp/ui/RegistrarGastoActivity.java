@@ -260,7 +260,7 @@ public class RegistrarGastoActivity extends AppCompatActivity {
                     android.content.res.ColorStateList.valueOf(0xFFCCCCCC));
 
             btnOtrosSub.setOnClickListener(v -> {
-                idSubcategoriaSeleccionada = 0;
+                idSubcategoriaSeleccionada = -2;
                 nombreSubcategoriaSeleccionada = "Otros";
                 subcategoriaEsOtros = true; // activa la validación de descripción obligatoria
                 for (int i = 0; i < gridSubcategorias.getChildCount(); i++) {
@@ -418,7 +418,7 @@ public class RegistrarGastoActivity extends AppCompatActivity {
 
         double importe = Double.parseDouble(importeTexto);
         int idCat = idCategoriaSeleccionada;                                    // id real de la categoría
-        int idSub = (idSubcategoriaSeleccionada == -1) ? 0 : idSubcategoriaSeleccionada; // 0 si no aplica
+        int idSub = (idSubcategoriaSeleccionada == -1 || idSubcategoriaSeleccionada == -2) ? 0 : idSubcategoriaSeleccionada;
 
         if (modoEdicion && gastoEditar != null) {
             // Actualizamos el gasto existente y cerramos la pantalla

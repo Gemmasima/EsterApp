@@ -10,7 +10,7 @@ import com.gemma.esterapp.model.Categoria;
 import java.util.List;
 
 // @Dao le dice a Room que esta interfaz es un DAO
-// Room genera automáticamente el código SQL de cada método al compilar
+// Room genera automáticamente el código SQL de cada metodo al compilar
 @Dao
 public interface CategoriaDAO {
 
@@ -27,12 +27,12 @@ public interface CategoriaDAO {
     @Delete
     void delete(Categoria categoria);
 
-    // Devuelve todas las categorías de la tabla
-    // Usado en InformesActivity para cargar los mapas de nombres
+    // Devuelve toda la tabla
+    // LiveData hace que la pantalla se actualice automatic. si cambia algun dato
     @Query("SELECT * FROM categorias")
     LiveData<List<Categoria>> getAllCategorias();
 
-    // Busca una categoría por su id
+    // Busca y devuelve LiveData la categoría que tenga ese id concreto.
     @Query("SELECT * FROM categorias WHERE id_categoria = :id")
     LiveData<Categoria> getCategoriaById(int id);
 }

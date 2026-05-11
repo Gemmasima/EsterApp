@@ -10,7 +10,7 @@ import com.gemma.esterapp.model.Gasto;
 import java.util.List;
 
 // @Dao le dice a Room que esta interfaz es un DAO
-// Room genera automáticamente el código SQL de cada método al compilar
+// Room genera automáticamente el código SQL de cada metodo al compilar
 @Dao
 public interface GastoDAO {
 
@@ -26,15 +26,16 @@ public interface GastoDAO {
     @Delete
     void delete(Gasto gasto);
 
-    // Devuelve todos los gastos de la tabla
+    // Devuelve todos los gastos de la tabla sin ningun filtro
     @Query("SELECT * FROM gastos")
     LiveData<List<Gasto>> getAllGastos();
 
-    // Devuelve todos los gastos registrados por un usuario concreto
+    /* Devuelve solo los gastos registrados por un usuario concreto, se usa
+    para que Gerente y Trabajador solo vean sus propios movimientos */
     @Query("SELECT * FROM gastos WHERE id_usuario = :idUsuario")
     LiveData<List<Gasto>> getGastosByUsuario(int idUsuario);
 
-    // Devuelve todos los gastos de una categoría concreta
+    // Devuelve todos los gastos que pertenecen a una categoria concreta (id)
     @Query("SELECT * FROM gastos WHERE id_categoria = :idCategoria")
     LiveData<List<Gasto>> getGastosByCategoria(int idCategoria);
 
@@ -42,26 +43,27 @@ public interface GastoDAO {
     @Query("SELECT * FROM gastos WHERE fecha = :fecha")
     LiveData<List<Gasto>> getGastosByFecha(String fecha);
 
-    // Devuelve la suma total de gastos de un mes concreto
-    // substr(fecha, 1, 7) extrae los primeros 7 caracteres: "2026-03"
+    /* Calcula y devuelve la suma total de los importes de un mes concreto
+    se usa en InformesActivity para mostrar el total de gastos del mes en rojo */
     @Query("SELECT SUM(importe) FROM gastos WHERE substr(fecha, 1, 7) = :mes")
     LiveData<Double> getTotalGastosByMes(String mes);
 
-    // Devuelve la suma total de gastos de un día concreto
+    // Calcula y devuelve la suma total de los importes de un día concreto
     @Query("SELECT SUM(importe) FROM gastos WHERE fecha = :fecha")
     LiveData<Double> getTotalGastosByDia(String fecha);
 
-    // Devuelve la suma total de gastos entre dos fechas
-    // BETWEEN incluye las dos fechas extremas
+    /* Calcula y devuelve la suma total de los importes entre dos fechas
+    BETWEN incluye las dos fechas (desde y hasta) */
     @Query("SELECT SUM(importe) FROM gastos WHERE fecha BETWEEN :desde AND :hasta")
     LiveData<Double> getTotalGastosByRangoFechas(String desde, String hasta);
 
-    // Devuelve todos los gastos entre dos fechas — usado para generar el CSV
+    /* Devuelve todos los gastos entre dos fechas, se usa en GeneraraInformesActivity
+    para construir el CSV con el rango de fechas seleccionado */
     @Query("SELECT * FROM gastos WHERE fecha BETWEEN :desde AND :hasta")
     LiveData<List<Gasto>> getGastosByRangoFechas(String desde, String hasta);
 
-    // Devuelve todos los gastos de un mes concreto ordenados por fecha descendente
-    // Usado en InformesActivity para mostrar la lista de movimientos
+    /* Devuelve todos los gastos de un mes concreto ordenados de más reciente al
+    mas antiguo. Se usa en InformesActivity para mostrar la lista de movimientos del  mes */
     @Query("SELECT * FROM gastos WHERE substr(fecha, 1, 7) = :mes ORDER BY fecha DESC")
     LiveData<List<Gasto>> getGastosByMes(String mes);
 }

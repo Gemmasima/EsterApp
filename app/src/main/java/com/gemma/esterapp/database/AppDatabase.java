@@ -16,14 +16,13 @@ import com.gemma.esterapp.model.Ingreso;
 import com.gemma.esterapp.model.Subcategoria;
 import com.gemma.esterapp.model.Usuario;
 
-// @Database le dice a Room que esta clase es la base de datos principal de la app
-// entities: declara todas las tablas que existen en la base de datos
-// version = 1: version actual de la BD, se incrementa si se cambia la estructura
+// @Database le dice a Room que esta clase es la BASE DE DATOS principal de la app
+// entities: declara las 5 tablas que existen en la base de datos
 @Database(entities = {Usuario.class, Gasto.class, Ingreso.class, Categoria.class, Subcategoria.class}, version = 2)
 public abstract class AppDatabase extends RoomDatabase { // abstract porque Room genera la implementacion automaticamente
 
-    // Nombre del archivo fisico que Room crea en el almacenamiento interno de la tablet
-    private static final String DB_NAME = "esterapp_db";
+    // Nombre del archivo fisico que Room crea, despues de getInstance, en el interno de la tablet.
+    private static final String DB_NAME = "esterapp_db"; //constante
 
     // Variable que guarda la unica instancia de la base de datos
     // static: pertenece a la clase, no a un objeto concreto
@@ -38,9 +37,13 @@ public abstract class AppDatabase extends RoomDatabase { // abstract porque Room
     public abstract CategoriaDAO categoriaDAO();   // operaciones sobre la tabla categorias
     public abstract SubcategoriaDAO subcategoriaDAO(); // operaciones sobre la tabla subcategorias
 
-    // getInstance() es el metodo que toda la app usa para obtener la base de datos
-    // synchronized: garantiza que si dos hilos llaman a la vez, solo uno entra
-    // Esto evita que se creen dos instancias distintas por accidente
+    /* El metodo getInstance() garantiza que solo se cree una conexión a la base de datos. (abrir el archivo.db)
+    para consultas o modificaciones. Cuando una pantalla necesita acceder a datos llama a este metodo, comprueba
+    si ya hay una conex. abierta de SQLite; si no existe la crea, si ya existe la devuelve. De esta forma todas
+    las pantallas comparten siempre la misma conex. el llamado PATRON SINGLETON. */
+
+    /* synchronized garantiza que aunque haya varios hilos (pantallas) intentando acceder a este metodo a la vez,
+    solo uno pueda ejecutarse, evitando que se creen dos conexiones simultáneas por error. */
     public static synchronized AppDatabase getInstance(Context context) {
 
         // Solo creamos la instancia si todavia no existe
@@ -53,24 +56,22 @@ public abstract class AppDatabase extends RoomDatabase { // abstract porque Room
                             DB_NAME)                        // nombre del archivo fisico en la tablet
 
                     // Si la version cambia, Room borra y recrea la BD automaticamente
-                    // Solo se usa en desarrollo, en produccion se usaria una migracion
                     .fallbackToDestructiveMigration()
 
-                    // Registra DatosIniciales como callback
-                    // DatosIniciales.onCreate() se ejecutara cuando la BD se cree por primera vez
+                    /* Registra DatosIniciales
+                       DatosIniciales.onCreate() se ejecutara cuando la BD se cree por primera vez */
                     .addCallback(new DatosIniciales())
 
                     // build() termina de configurar Room pero todavia NO crea el archivo fisico
                     .build();
 
-            // SOLUCION AL PROBLEMA DE INICIALIZACION:
-            // Room no crea fisicamente el archivo esterapp_db hasta que alguien
-            // hace la primera consulta. Si no forzamos esto, DatosIniciales.onCreate()
-            // no se ejecutaria hasta que el usuario pulsara Entrar en el login,
-            // y la tabla usuarios estaria vacia en ese momento.
-            // getWritableDatabase() fuerza la creacion inmediata del archivo
-            // y dispara DatosIniciales.onCreate() con todas las inserciones
-            // antes de que la pantalla de login este disponible para el usuario
+            /* ---SOLUCIÓN AL PROBLEMA DE INICIALIZACIÓN---
+            Por defecto Room no crea fisicamente el archivo.db hasta que se hace la primera consulta, esto significa que
+            DatosIniciales.onCreate() no se ejecuta y la BD está completamente vacia.
+            El problema era que incialmente al poner el usuario+password correcto daba error, pq la tabla usuarios estaba vacía
+            y por lo tanto era no se realizaba la 1a consulta, es un bucle sin fin.
+            Con getWritableDatabase() se fuerza a Room a crear el archivo .db y seguidamente se ejecuta DatosIniciales
+            insertando todos los datos iniciales antes de que aparezca la pantalla login. */
             miBaseDeDatos.getOpenHelper().getWritableDatabase();
         }
 
