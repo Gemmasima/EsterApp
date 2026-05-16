@@ -9,30 +9,28 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-/**
- * REPOSITORIO DE CATEGORIA
- * Capa intermedia entre la UI y la base de datos.
+/* REPOSITORIO DE CATEGORIA - Capa intermedia entre la UI y la base de datos.
  * La UI nunca habla directamente con CategoriaDAO, siempre pasa por aquí.
- * Arquitectura: UI → Repository → DAO → Room → SQLite
- */
+ * Flujo: UI → Repository → DAO → Room → SQLite */
 public class CategoriaRepository {
 
     // DAO para acceder a la tabla categorias
     private final CategoriaDAO categoriaDAO;
 
-    // Hilo secundario para operaciones de escritura (insert, update, delete)
+    /* ExecutorService gestiona un hilo secundario para las operaciones de escritura.
+     * Android no permite modificar la BD en el hilo principal porque bloquea la pantalla,
+     * por eso insert, update y delete se ejecutan en un hilo separado. */
     private final ExecutorService executorService;
 
-    // CONSTRUCTOR — obtiene la instancia única de la BD y prepara el hilo secundario
+    // CONSTRUCTOR — obtiene la instancia unica de la BD (Singleton) y prepara el hilo secundario
     public CategoriaRepository(Application application) {
         AppDatabase db = AppDatabase.getInstance(application);
         categoriaDAO = db.categoriaDAO();
-        executorService = Executors.newSingleThreadExecutor();
+        executorService = Executors.newSingleThreadExecutor();  // un unico hilo secundario para evitar conflictos
     }
 
-    // ─────────────────────────────────────────────
+
     // OPERACIONES DE ESCRITURA (hilo secundario)
-    // ─────────────────────────────────────────────
 
     // Inserta una categoría nueva en la base de datos
     public void insert(Categoria categoria) {
@@ -50,16 +48,15 @@ public class CategoriaRepository {
         executorService.execute(() -> categoriaDAO.delete(categoria));
     }
 
-    // ─────────────────────────────────────────────
-    // OPERACIONES DE LECTURA (devuelven LiveData)
-    // ─────────────────────────────────────────────
 
+    // OPERACIONES DE LECTURA (devuelven LiveData)
+    // Room ejecuta automaticamente las lecturas en un hilo secundario, no hace falta ExecutorService
     // Devuelve todas las categorías — usado en InformesActivity para el mapa de nombres
     public LiveData<List<Categoria>> getAllCategorias() {
         return categoriaDAO.getAllCategorias();
     }
 
-    // Devuelve una categoría por su id
+    // Busca y devuelve una categoría por su id
     public LiveData<Categoria> getCategoriaById(int id) {
         return categoriaDAO.getCategoriaById(id);
     }

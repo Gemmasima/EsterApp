@@ -9,12 +9,10 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-/**
- * REPOSITORIO DE SUBCATEGORIA
- * Capa intermedia entre la UI y la base de datos.
+/* REPOSITORIO DE SUBCATEGORIA - Capa intermedia entre la UI y la base de datos.
  * La UI nunca habla directamente con SubcategoriaDAO, siempre pasa por aquí.
- * Arquitectura: UI → Repository → DAO → Room → SQLite
- */
+ * Flujo: UI → Repository → DAO → Room → SQLite */
+
 public class SubcategoriaRepository {
 
     // DAO para acceder a la tabla subcategorias
@@ -30,9 +28,8 @@ public class SubcategoriaRepository {
         executorService = Executors.newSingleThreadExecutor();
     }
 
-    // ─────────────────────────────────────────────
+
     // OPERACIONES DE ESCRITURA (hilo secundario)
-    // ─────────────────────────────────────────────
 
     // Inserta una subcategoría nueva en la base de datos
     public void insert(Subcategoria subcategoria) {
@@ -50,23 +47,22 @@ public class SubcategoriaRepository {
         executorService.execute(() -> subcategoriaDAO.delete(subcategoria));
     }
 
-    // ─────────────────────────────────────────────
     // OPERACIONES DE LECTURA (devuelven LiveData)
-    // ─────────────────────────────────────────────
+    // Room ejecuta automaticamente las lecturas en un hilo secundario, no hace falta ExecutorService
 
-    // Devuelve todas las subcategorías — usado en InformesActivity para el mapa de nombres
+    // Devuelve todas las subcategorías
     public LiveData<List<Subcategoria>> getAllSubcategorias() {
         return subcategoriaDAO.getAllSubcategorias();
     }
 
-    // Devuelve las subcategorías de una categoría concreta
-    // Usado en RegistrarGastoActivity para mostrar los botones de subcategoría
-    // cuando el usuario selecciona una categoría
+    // Devuelve todas las subcategorias que pertenecen a una categoria concreta
+    // Por ejemplo, si el usuario selecciona Vehiculos devuelve Gasolina, Seguros y Taller
+    // Se usa en RegistrarGastoActivity para mostrar los botones de subcategoria dinamicamente
     public LiveData<List<Subcategoria>> getSubcategoriasByCategoria(int idCategoria) {
         return subcategoriaDAO.getSubcategoriasByCategoria(idCategoria);
     }
 
-    // Devuelve una subcategoría por su id
+    // Busca y devuelve una subcategoría por su id
     public LiveData<Subcategoria> getSubcategoriaById(int id) {
         return subcategoriaDAO.getSubcategoriaById(id);
     }

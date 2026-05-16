@@ -392,15 +392,11 @@ public class GenerarInformeActivity extends AppCompatActivity {
             String nombreArchivo = "informe_" + tipo + "_"
                     + fechaDesde + "_" + fechaHasta + ".csv";
 
-            // Crea la carpeta GazzolaShop dentro de Documentos si no existe
-            File carpeta = new File(
-                    Environment.getExternalStoragePublicDirectory(
-                            Environment.DIRECTORY_DOCUMENTS), "GazzolaShop");
-            if (!carpeta.exists()) {
-                carpeta.mkdirs(); // crea la carpeta y todas las necesarias por encima
-            }
-            // Crea el archivo fisico dentro de la carpeta GazzolaShop
-            File archivo = new File(carpeta, nombreArchivo);
+            // Crea el archivo fisico en la carpeta privada de la app dentro de Documentos
+            // FileProvider necesita esta ruta para poder compartir el archivo de forma segura
+            File archivo = new File(
+                    getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), nombreArchivo);
+
 
             // Abre el archivo, escribe el contenido del CSV y lo cierra
             FileWriter writer = new FileWriter(archivo);

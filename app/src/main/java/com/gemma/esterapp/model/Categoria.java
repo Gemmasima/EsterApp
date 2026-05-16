@@ -3,20 +3,25 @@ package com.gemma.esterapp.model;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-// @Entity indica que esta clase es la tabla "categorias" en SQLite
-// No tiene FK porque es una tabla independiente — las otras tablas apuntan a ella,
-// pero ella no depende de ninguna otra
+/* CATEGORIA
+ * Clase que representa la tabla categorias en la DB.
+ * Cada categoria es una fila de esa tabla. No tiene FK porque es una tabla independiente,
+ * son las otras tablas las que apuntan a ella. */
+
+// @Entity le dice a Room que tiene que crear una tabla llamada categorias
 @Entity(tableName = "categorias")
 public class Categoria {
 
-    // Clave primaria, se genera automáticamente con cada nueva categoría
+    // Primary Key, Room lo asigna automatic. con cada nueva categoria
     @PrimaryKey(autoGenerate = true)
     private int id_categoria;
 
-    // Nombre de la categoría (ej: "Proveedores de materiales", "Impuestos", "Salarios")
-    private String nombre;
+    // Columnas de la tabla categorias - cada atributo es una columna
+    private String nombre; // nombre de la categoria (prov. de materiales, ...)
 
-    // GETTERS Y SETTERS
+    /* GETTERS Y SETTERS
+     * Room necesita los getters para leer los datos de la BD y los setters
+     * para escribirlos */
     public int getId_categoria() { return id_categoria; }
     public void setId_categoria(int id_categoria) { this.id_categoria = id_categoria; }
 

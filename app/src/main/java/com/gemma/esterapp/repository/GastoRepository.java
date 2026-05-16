@@ -9,30 +9,29 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-/**
- * REPOSITORIO DE GASTO
- * Capa intermedia entre la UI y la base de datos.
+/* REPOSITORIO DE GASTO - Capa intermedia entre la UI y la base de datos.
  * La UI nunca habla directamente con GastoDAO, siempre pasa por aquí.
- * Arquitectura: UI → Repository → DAO → Room → SQLite
- */
+ * Flujo: UI → Repository → DAO → Room → SQLite */
 public class GastoRepository {
 
     // DAO para acceder a la tabla gastos
     private final GastoDAO gastoDAO;
 
-    // Hilo secundario para operaciones de escritura (insert, update, delete)
+    /* ExecutorService gestiona un hilo secundario para las operaciones de escritura.
+     * Android no permite modificar la BD en el hilo principal porque bloquea la pantalla,
+     * por eso insert, update y delete se ejecutan en un hilo separado. */
     private final ExecutorService executorService;
 
-    // CONSTRUCTOR — obtiene la instancia única de la BD y prepara el hilo secundario
+    // Constructor — obtiene la instancia unica de la BD (Singleton) y prepara el hilo secundario
     public GastoRepository(Application application) {
         AppDatabase db = AppDatabase.getInstance(application);
         gastoDAO = db.gastoDAO();
-        executorService = Executors.newSingleThreadExecutor();
+        executorService = Executors.newSingleThreadExecutor(); // un unico hilo secundario para evitar conflictos
     }
 
-    // ─────────────────────────────────────────────
+
     // OPERACIONES DE ESCRITURA (hilo secundario)
-    // ─────────────────────────────────────────────
+
 
     // Inserta un gasto nuevo en la base de datos
     public void insert(Gasto gasto) {
@@ -49,9 +48,9 @@ public class GastoRepository {
         executorService.execute(() -> gastoDAO.delete(gasto));
     }
 
-    // ─────────────────────────────────────────────
+
     // OPERACIONES DE LECTURA (devuelven LiveData)
-    // ─────────────────────────────────────────────
+// Room ejecuta automaticamente las lecturas en un hilo secundario, no hace falta ExecutorService
 
     // Devuelve todos los gastos — la UI se actualiza sola si cambia algo
     public LiveData<List<Gasto>> getAllGastos() {

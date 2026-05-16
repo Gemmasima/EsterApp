@@ -6,7 +6,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 
 /* DATOS INICIALES
     Esta clase se ejecuta automaticamente, una sola vez, cuando Room crea el archivo ester_app.db por
-    primera vez. Inserta los tres usuarios iniciales, las cinco categorías de gastos y todas sus
+    primera vez. Inserta los tres usuarios iniciales, las seis categorías de gastos y todas sus
     subcategorías en SQLite usando db.execSQL(), sin la ejecucion de esta clase no se puede accder a la app */
 
 /* Hereda de RoomDatabase.Callback para que Room sepa que tiene que llamarla en el momento en que
@@ -14,8 +14,8 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 public class DatosIniciales extends RoomDatabase.Callback {
 
     /* Room llama a este metodo automátic cuando crea la BD por primera vez.
-    // db es la conexión directa a SQLite que Room nos pasa en ese momento para poder insertar datos
-    // @NonNull garantiza que db siempre tendrá un valor válido — Room nunca lo llamará con null */
+       db es la conexión directa a SQLite que Room nos pasa en ese momento para poder insertar datos
+        @NonNull garantiza que db siempre tendrá un valor válido — Room nunca lo llamará con null */
     @Override
     public void onCreate(@NonNull SupportSQLiteDatabase db) {
         super.onCreate(db); // llamamos al metodo padre antes de hacer nada
@@ -32,14 +32,14 @@ public class DatosIniciales extends RoomDatabase.Callback {
         db.execSQL("INSERT INTO usuarios (nombre, usuario, contrasena, rol) VALUES ('Francesca', 'francesca', 'francesca123', 'Trabajador')"); // trabajadora, puede registrar y modificar sus movimientos
 
         // ---- CATEGORIAS ----
-        // Insertamos las 5 categorias de gastos del negocio
+        // Insertamos las 6 categorias de gastos del negocio
         // Room asigna automaticamente el id (autoGenerate), empezando por 1
         db.execSQL("INSERT INTO categorias (nombre) VALUES ('Proveedores de materiales')"); // id=1 — productos que vende el negocio
         db.execSQL("INSERT INTO categorias (nombre) VALUES ('Proveedores de servicios')");  // id=2 — suministros del local
         db.execSQL("INSERT INTO categorias (nombre) VALUES ('Impuestos')");                 // id=3 — sin subcategorias
         db.execSQL("INSERT INTO categorias (nombre) VALUES ('Salarios')");                  // id=4 — sin subcategorias
         db.execSQL("INSERT INTO categorias (nombre) VALUES ('Vehiculos')");                 // id=5 — gastos de los vehiculos del negocio
-        db.execSQL("INSERT INTO categorias (nombre) VALUES ('Otros')");                     // id=6 - otros
+        db.execSQL("INSERT INTO categorias (nombre) VALUES ('Otros')");                     // id=6 - otros, categoria sin clasificar, descripcion obligatoria
 
         // ---- SUBCATEGORIAS de Proveedores de materiales (id_categoria = 1) ----
         // Tipos de productos que vende el negocio
@@ -58,7 +58,7 @@ public class DatosIniciales extends RoomDatabase.Callback {
         db.execSQL("INSERT INTO subcategorias (nombre, id_categoria) VALUES ('Basuras', 2)");
 
         // ---- SUBCATEGORIAS de Vehiculos (id_categoria = 5) ----
-        // Impuestos (id=3) y Salarios (id=4) no tienen subcategorias
+        // Impuestos (id=3) y Salarios (id=4)  y otros (id=6) no tienen subcategorias
         db.execSQL("INSERT INTO subcategorias (nombre, id_categoria) VALUES ('Gasolina', 5)");
         db.execSQL("INSERT INTO subcategorias (nombre, id_categoria) VALUES ('Seguros', 5)");
         db.execSQL("INSERT INTO subcategorias (nombre, id_categoria) VALUES ('Taller', 5)");

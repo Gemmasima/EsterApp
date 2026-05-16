@@ -4,26 +4,28 @@ import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
-// @Entity indica que esta clase es la tabla "gastos" en SQLite
-// foreignKeys define las relaciones con otras tablas
+
+/* GASTO - Clase que representa la tabla gastos en la DB.
+*   Cada gasto registrado en la app es una fila de esa tabla, los FK definene las relaciones
+*   con otras tablas y garantizan que no queden gastos huerfanos, es decir, gastos que no apunten
+*   a ningun usuario, categoria o subcategoria. */
+
+// @Entity le dice a Room que tiene que crear una tabla llamada gastos
 // RESTRICT significa que no se puede borrar el padre si tiene hijos asociados
 @Entity(tableName = "gastos",
         foreignKeys = {
-                // Un gasto pertenece a un usuario — no se puede borrar un usuario con gastos
                 @ForeignKey(
                         entity = Usuario.class,
                         parentColumns = "id_usuario",   // columna PK en la tabla usuarios
                         childColumns = "id_usuario",    // columna FK en la tabla gastos
-                        onDelete = ForeignKey.RESTRICT),
+                        onDelete = ForeignKey.RESTRICT), // impide borrar un usuario si tiene gastos asociados
 
-                // Un gasto pertenece a una categoría — no se puede borrar una categoría con gastos
                 @ForeignKey(
                         entity = Categoria.class,
                         parentColumns = "id_categoria",
                         childColumns = "id_categoria",
                         onDelete = ForeignKey.RESTRICT),
 
-                // Un gasto pertenece a una subcategoría — no se puede borrar una subcategoría con gastos
                 @ForeignKey(
                         entity = Subcategoria.class,
                         parentColumns = "id_subcategoria",
@@ -32,19 +34,21 @@ import androidx.room.PrimaryKey;
         })
 public class Gasto {
 
-    // Clave primaria, se genera automáticamente con cada nuevo gasto
+    // Primary Key, Room lo asigna automatic. con cada nuevo registro
     @PrimaryKey(autoGenerate = true)
     private int id_gasto;
 
-    // Columnas de la tabla gastos
+    // Columnas de la tabla gastos - cada atributo es una columna
     private double importe;         // importe del gasto en euros
     private String fecha;           // formato "YYYY-MM-DD" — SQLite no tiene tipo DATE nativo
-    private String notas;     // descripción opcional del gasto
+    private String notas;           // descripción opcional del gasto
     private int id_categoria;       // FK → tabla categorias
     private int id_subcategoria;    // FK → tabla subcategorias (0 si no aplica)
     private int id_usuario;         // FK → tabla usuarios (quién registró el gasto)
 
-    // GETTERS Y SETTERS
+    /* GETTERS Y SETTERS
+    * Room necesita los getters para leer los datos de la BD y los setters
+    * para escribirlos */
     public int getId_gasto() { return id_gasto; }
     public void setId_gasto(int id_gasto) { this.id_gasto = id_gasto; }
 

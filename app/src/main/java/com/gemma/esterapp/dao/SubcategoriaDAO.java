@@ -27,14 +27,14 @@ public interface SubcategoriaDAO {
     @Delete
     void delete(Subcategoria subcategoria);
 
-    // Devuelve todas las subcategorías de la tabla
-    // Usado en InformesActivity para cargar el mapa de nombres de subcategorías
+    /* Devuelve todas las subcategorías de la tabla sin ningun filtro
+    * Se usa en informesactivity para poder mostrar el nombre de la subcategoria
+    * en la lista de movimientos */
     @Query("SELECT * FROM subcategorias")
     LiveData<List<Subcategoria>> getAllSubcategorias();
 
-    // Devuelve las subcategorías de una categoría concreta
-    // Usado en RegistrarGastoActivity para mostrar los botones de subcategoría
-    // cuando el usuario selecciona una categoría
+    /* Devuelve las subcategorías de una categoría concreta.
+    * Se usa en resgistrargastoactivity para mostrar los botones de subcate */
     @Query("SELECT * FROM subcategorias WHERE id_categoria = :idCategoria")
     LiveData<List<Subcategoria>> getSubcategoriasByCategoria(int idCategoria);
 

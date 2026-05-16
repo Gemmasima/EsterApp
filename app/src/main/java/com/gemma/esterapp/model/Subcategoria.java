@@ -4,8 +4,13 @@ import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
-// @Entity indica que esta clase es la tabla "subcategorias" en SQLite
-// Depende de Categoria — no se puede borrar una categoría si tiene subcategorías asociadas
+/* SUBCATEGORIA - Clase que representa la tabla subcategorias en la DB.
+ * Cada subcategoria es una fila de esa tabla y pertenece siempre a una categoria.
+ * Solo las categorias Articulos, Servicios y Vehiculos tienen subcategorias.
+ * Impuestos, Salarios y Otros no tienen subcategorias. */
+
+// @Entity le dice a Room que tiene que crear una tabla llamada subcategorias
+// RESTRICT significa que no se puede borrar el padre si tiene hijos asociados
 @Entity(tableName = "subcategorias",
         foreignKeys = {
                 @ForeignKey(
@@ -16,17 +21,17 @@ import androidx.room.PrimaryKey;
         })
 public class Subcategoria {
 
-    // Clave primaria, se genera automáticamente con cada nueva subcategoría
+    // Primary Key, Room lo asigna automatic. con cada nueva subcategoria
     @PrimaryKey(autoGenerate = true)
     private int id_subcategoria;
 
-    // Nombre de la subcategoría (ej: "Electrodomésticos", "Luz", "Gasolina")
-    private String nombre;
+    // Columnas de la tabla subcategorias - cada atributo es una columna
+    private String nombre; // nombre de la subcategoria (ej: "Electrodomesticos", "Luz", "Gasolina")
+    private int id_categoria; // FK → tabla categorias: indica a que categoria pertenece esta subcategoria
 
-    // FK → tabla categorias: indica a qué categoría pertenece esta subcategoría
-    private int id_categoria;
-
-    // GETTERS Y SETTERS
+    /* GETTERS Y SETTERS
+     * Room necesita los getters para leer los datos de la BD y los setters
+     * para escribirlos */
     public int getId_subcategoria() { return id_subcategoria; }
     public void setId_subcategoria(int id_subcategoria) { this.id_subcategoria = id_subcategoria; }
 

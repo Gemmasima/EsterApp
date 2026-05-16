@@ -4,8 +4,10 @@ import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
-// @Entity indica que esta clase es la tabla "ingresos" en SQLite
-// Un ingreso solo tiene FK con usuarios, no tiene categorías
+/* INGRESO
+ * Clase que representa la tabla ingresos en la DB.
+ * Cada ingreso registrado en la app es una fila de esa tabla. A diferencia de Gasto,
+ * solo tiene una FK con la tabla usuarios ya que los ingresos no tienen categorias ni subcategorias. */
 @Entity(tableName = "ingresos",
         foreignKeys = {
                 // Un ingreso pertenece a un usuario — no se puede borrar un usuario con ingresos
@@ -17,18 +19,20 @@ import androidx.room.PrimaryKey;
         })
 public class Ingreso {
 
-    // Clave primaria, se genera automáticamente con cada nuevo ingreso
+    // Primary Key, Room lo asigna automatic. con cada nuevo registro
     @PrimaryKey(autoGenerate = true)
     private int id_ingreso;
 
-    // Columnas de la tabla ingresos
+    // Columnas de la tabla ingresos - cada atributo es una columna
     private double importe;         // importe del ingreso en euros
     private String fecha;           // formato "YYYY-MM-DD" — SQLite no tiene tipo DATE nativo
     private String tipoingreso;     // "Efectivo" o "Tarjeta" — sin espacio, nombre exacto del campo
     private String notas;           // notas opcionales
     private int id_usuario;         // FK → tabla usuarios (quién registró el ingreso)
 
-    // GETTERS Y SETTERS
+    /* GETTERS Y SETTERS
+     * Room necesita los getters para leer los datos de la BD y los setters
+     * para escribirlos */
     public int getId_ingreso() { return id_ingreso; }
     public void setId_ingreso(int id_ingreso) { this.id_ingreso = id_ingreso; }
 

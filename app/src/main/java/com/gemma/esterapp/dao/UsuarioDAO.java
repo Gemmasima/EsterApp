@@ -27,18 +27,18 @@ public interface UsuarioDAO {
     @Delete
     void delete(Usuario usuario);
 
-    // Devuelve todos los usuarios de la tabla
-    // LiveData: la pantalla se actualiza automáticamente si la lista cambia
+    /* Devuelve todos los usuarios de la tabla sin ningun filtro
+       LiveData: la pantalla se actualiza automáticamente si la lista cambia */
     @Query("SELECT * FROM usuarios")
     LiveData<List<Usuario>> getAllUsuarios();
 
-    // Valida el login buscando usuario + contraseña en la BD
-    // :usuario y :contrasena son parámetros que Room conecta con los de Java
-    // Devuelve el Usuario si las credenciales son correctas, null si no existe
+    /* Busca en la tabla usuarios la fila que coincida con el usuario y la contraseña introducida
+    * Devuelve el objeto Usuario conpleto si las credenciales son correctas, null si no existe*/
     @Query("SELECT * FROM usuarios WHERE usuario = :usuario AND contrasena = :contrasena")
     LiveData<Usuario> login(String usuario, String contrasena);
 
-    // Busca un usuario por su id — usado para cargar datos de perfil
+    /* Busca y devuelve el usuario que tenga ese id concreto, se usa para cargar los
+    * datos del usuario en otras pantallas, el id es el valo que se pasa como parametro al llamar al metodo */
     @Query("SELECT * FROM usuarios WHERE id_usuario = :id")
     LiveData<Usuario> getUsuarioById(int id);
 }

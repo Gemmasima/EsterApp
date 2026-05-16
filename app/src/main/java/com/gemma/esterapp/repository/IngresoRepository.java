@@ -9,30 +9,28 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-/**
- * REPOSITORIO DE INGRESO
- * Capa intermedia entre la UI y la base de datos.
+/* REPOSITORIO DE INGRESO  -  Capa intermedia entre la UI y la base de datos.
  * La UI nunca habla directamente con IngresoDAO, siempre pasa por aquí.
- * Arquitectura: UI → Repository → DAO → Room → SQLite
- */
+ * Flujo: UI → Repository → DAO → Room → SQLite */
+
 public class IngresoRepository {
 
     // DAO para acceder a la tabla ingresos
     private final IngresoDAO ingresoDAO;
 
-    // Hilo secundario para operaciones de escritura (insert, update, delete)
+    /* ExecutorService gestiona un hilo secundario para las operaciones de escritura.
+     * Android no permite modificar la BD en el hilo principal porque bloquea la pantalla,
+     * por eso insert, update y delete se ejecutan en un hilo separado. */
     private final ExecutorService executorService;
 
-    // CONSTRUCTOR — obtiene la instancia única de la BD y prepara el hilo secundario
+    // Constructor — obtiene la instancia unica de la BD (Singleton) y prepara el hilo secundario
     public IngresoRepository(Application application) {
         AppDatabase db = AppDatabase.getInstance(application);
         ingresoDAO = db.ingresoDAO();
         executorService = Executors.newSingleThreadExecutor();
     }
 
-    // ─────────────────────────────────────────────
     // OPERACIONES DE ESCRITURA (hilo secundario)
-    // ─────────────────────────────────────────────
 
     // Inserta un ingreso nuevo en la base de datos
     public void insert(Ingreso ingreso) {
@@ -49,11 +47,9 @@ public class IngresoRepository {
         executorService.execute(() -> ingresoDAO.delete(ingreso));
     }
 
-    // ─────────────────────────────────────────────
-    // OPERACIONES DE LECTURA (devuelven LiveData)
-    // ─────────────────────────────────────────────
 
-    // Devuelve todos los ingresos — la UI se actualiza sola si cambia algo
+    // OPERACIONES DE LECTURA (devuelven LiveData)
+// Room ejecuta automaticamente las lecturas en un hilo secundario, no hace falta ExecutorService
     public LiveData<List<Ingreso>> getAllIngresos() {
         return ingresoDAO.getAllIngresos();
     }
