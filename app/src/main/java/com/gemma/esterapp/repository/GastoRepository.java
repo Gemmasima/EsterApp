@@ -32,7 +32,6 @@ public class GastoRepository {
 
     // OPERACIONES DE ESCRITURA (hilo secundario)
 
-
     // Inserta un gasto nuevo en la base de datos
     public void insert(Gasto gasto) {
         executorService.execute(() -> gastoDAO.insert(gasto));

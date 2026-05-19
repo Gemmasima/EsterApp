@@ -55,11 +55,10 @@ public class GenerarInformeActivity extends AppCompatActivity {
     private CheckBox cbImpuestos;
     private CheckBox cbSalarios;
     private CheckBox cbVehiculos;
-    private CheckBox cbTodoIngresos;            // selecciona Efectivo y Tarjeta
+    private CheckBox cbTodoIngresos;// selecciona Efectivo y Tarjeta
     private CheckBox cbEfectivo;
     private CheckBox cbTarjeta;
     private Button btnGenerarCSV; //genera el CSV y abre el codigo para compartirlo
-    private Button btnGuardarCSV; // para guardar el CSV en la tablet fisicamente
     private ImageButton iconoHome; //boton barra inferior
     private ImageButton iconoInformes;
 
@@ -106,7 +105,6 @@ public class GenerarInformeActivity extends AppCompatActivity {
         cbEfectivo = findViewById(R.id.cbEfectivo);
         cbTarjeta = findViewById(R.id.cbTarjeta);
         btnGenerarCSV = findViewById(R.id.btnGenerarCSV);
-        btnGuardarCSV = findViewById(R.id.btnGuardarCSV);
         iconoHome = findViewById(R.id.iconoHome);
         iconoInformes = findViewById(R.id.iconoInformes);
 
@@ -161,12 +159,6 @@ public class GenerarInformeActivity extends AppCompatActivity {
         btnGenerarCSV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) { generarCSV(); }
-        });
-
-        //cuando pulsa Guardar, guarda el CSV en la carpeta Documentos de la tablet
-        btnGuardarCSV.setOnClickListener( new View.OnClickListener() {
-            @Override
-            public void onClick(View v) { guardarCSV(); }
         });
 
         // cuando se pulsa la casita navega a menuactivity
@@ -239,39 +231,20 @@ public class GenerarInformeActivity extends AppCompatActivity {
         String tipo = spinnerTipo.getSelectedItem().toString();
 
         if (tipo.equals("Gastos")) {
-            generarCSVGastos(true);
+            generarCSVGastos();
         } else if (tipo.equals("Ingresos")) {
-            generarCSVIngresos(true);
+            generarCSVIngresos();
         } else {
-            generarCSVTodo(true); // Todo: gastos + ingresos sin filtro
+            generarCSVTodo(); // Todo: gastos + ingresos sin filtro
         }
     }
-
-    /* -- GUARDAR CSV --
-    *   Valida que se haya seleccionado un rango y llama al metodo correspondiente según el tipo elegido en el spinner
-    * A diferencia de generarCSV() pasa false para que el archivo se guarde en Documentos sin abrir el dialogo de compartir*/
-    private void guardarCSV() {
-        if (fechaDesde == null || fechaHasta == null) {
-            Toast.makeText(this, "Por favor selecciona un período", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        String tipo = spinnerTipo.getSelectedItem().toString();
-        if (tipo.equals("Gastos")) {
-            generarCSVGastos(false);
-        } else if (tipo.equals("Ingresos")) {
-            generarCSVIngresos(false);
-        } else {
-            generarCSVTodo(false);
-        }
-    }
-
 
     /* GENERAR CSV GASTOS
         Este metodo genera el CSV de la categoria gastos. Primero consulta en la BD todos los gastos entre las fechas
         seleccionadas. Despues comprueba que categorias se han marcado. Si es "todas" incluye todos los gastos sin
         filtrar, sino incluye las seleccionadas.*/
 
-    private void generarCSVGastos(boolean compartir) {
+    private void generarCSVGastos() {
         gastoRepository.getGastosByRangoFechas(fechaDesde, fechaHasta).observe(this, gastos -> {
 
             // Si no esta marcado todas
@@ -294,6 +267,11 @@ public class GenerarInformeActivity extends AppCompatActivity {
 
             double total = 0.0; //se irán sumando los importes de todos los gastos
             for (Gasto gasto : gastos) { //Bucle que recorre uno a uno todos los gastos que ha devuelto la consulta de la BD
+                // Si no se seleccionó "Todos" y la categoría del gasto no está en la lista de marcadas, saltamos al siguiente
+                if (categoriasFiltro != null && !categoriasFiltro.contains(gasto.getId_categoria())) {
+                    continue;
+                }
+
                 csv.append(gasto.getFecha()).append(","); //Escribe la fecha
                 csv.append(gasto.getNotas()).append(",");
                 csv.append(gasto.getId_categoria()).append(",");
@@ -302,7 +280,7 @@ public class GenerarInformeActivity extends AppCompatActivity {
             }
             csv.append("Total,,,").append(String.format("%.2f", total)).append("\n"); //Escribe el total acumulado de todos los importes con 2 decim.
 
-            procesarCSV(csv.toString(), "gastos", compartir); // toString convierte el StringBuilder, que ha ido acumulando todas las lineas con append(), en un unico String para pasarlo a procesarCSV
+            procesarCSV(csv.toString(), "gastos"); // toString convierte el StringBuilder, que ha ido acumulando todas las lineas con append(), en un unico String para pasarlo a procesarCSV
         });
     }
 
@@ -311,7 +289,7 @@ public class GenerarInformeActivity extends AppCompatActivity {
         Despues comprueba que tipo de ingreso se ha marcado. Si es todos (efectivo+targeta) sino incluye solo un tipo segun lo
         que haya seleccionado el usuario */
 
-    private void generarCSVIngresos(boolean compartir) {
+    private void generarCSVIngresos() {
         //construye el CSV con cabecera y una linea por ingreso
         ingresoRepository.getIngresosByRangoFechas(fechaDesde, fechaHasta).observe(this, ingresos -> {
             StringBuilder csv = new StringBuilder();
@@ -334,7 +312,7 @@ public class GenerarInformeActivity extends AppCompatActivity {
             }
             csv.append("Total,,,").append(String.format("%.2f", total)).append("\n"); //Escribe el total acumulado de todos los importes
 
-            procesarCSV(csv.toString(), "ingresos", compartir); // toString convierte el StringBuilder, que ha ido acumulando todas las lineas con append(), en un unico String para pasarlo a procesarCSV
+            procesarCSV(csv.toString(), "ingresos"); // toString convierte el StringBuilder, que ha ido acumulando todas las lineas con append(), en un unico String para pasarlo a procesarCSV
         });
     }
 
@@ -343,7 +321,7 @@ public class GenerarInformeActivity extends AppCompatActivity {
         fechas seleccionadas sin ningun filtro. Escribe una linea por cada ingreso con (+) y cada gasto con (-). Al final
         añade un total de ingresos y gastos y el balance resultante. */
 
-    private void generarCSVTodo(boolean compartir) {
+    private void generarCSVTodo() {
         //Consulta todos los ingresos/gastos entre las fechas selecionadas
         ingresoRepository.getIngresosByRangoFechas(fechaDesde, fechaHasta).observe(this, ingresos -> {
             gastoRepository.getGastosByRangoFechas(fechaDesde, fechaHasta).observe(this, gastos -> {
@@ -376,16 +354,15 @@ public class GenerarInformeActivity extends AppCompatActivity {
                 csv.append("Balance,,,")
                         .append(String.format("%.2f", totalIngresos - totalGastos)).append("\n"); //Calcula y escribe el balance restando el uno al otro
 
-                procesarCSV(csv.toString(), "todo", compartir); // toString convierte el StringBuilder, que ha ido acumulando todas las lineas con append(), en un unico String para pasarlo a procesarCSV
+                procesarCSV(csv.toString(), "todo"); // toString convierte el StringBuilder, que ha ido acumulando todas las lineas con append(), en un unico String para pasarlo a procesarCSV
             });
         });
     }
 
     /* PROCESAR CSV
-    Guarda el archivo CSV en la carpeta GazzolaShop dentro de Documentos.
-    Si compartir es true abre el dialogo del sistema para compartirlo.
-    Si compartir es false solo guarda el archivo y muestra un mensaje de confirmacion. */
-    private void procesarCSV(String contenido, String tipo, boolean compartir) {
+    Guarda el archivo CSV en la carpeta privada de la app dentro de Documentos.
+    Abre el diálogo del sistema para compartirlo. */
+    private void procesarCSV(String contenido, String tipo) {
         // bloque try-catch. por si algo sale mal salta el catch
         try {
             // Crea el nombre del archivo con esas variables para identificarlo, concatenando.
@@ -397,32 +374,28 @@ public class GenerarInformeActivity extends AppCompatActivity {
             File archivo = new File(
                     getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), nombreArchivo);
 
-
             // Abre el archivo, escribe el contenido del CSV y lo cierra
             FileWriter writer = new FileWriter(archivo);
             writer.write(contenido);
             writer.close();
 
-            if (compartir) {
-            /* FileProvider crea un URI seguro para acceder al archivo. Obligatorio desde Android 7.
-               Sin FileProvider Android bloquea el acceso al archivo por seguridad */
-                Uri uri = FileProvider.getUriForFile(this,
-                        getPackageName() + ".fileprovider", archivo);
-                // Crea el Intent de compartir y abre el dialogo del sistema para que el usuario elija la app
-                Intent intentCompartir = new Intent(Intent.ACTION_SEND);
-                intentCompartir.setType("text/csv"); // indica que se comparte un CSV para que el SO sepa que apps pueden abrirlo
-                intentCompartir.putExtra(Intent.EXTRA_STREAM, uri); // adjunta el archivo al Intent usando el URI
-                intentCompartir.putExtra(Intent.EXTRA_SUBJECT, "Informe Gazzola Shop"); // asunto para cuando se comparte por email
-                intentCompartir.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION); // permiso temporal para que la app elegida pueda leer el archivo
-                startActivity(Intent.createChooser(intentCompartir, "Compartir informe")); // lanza el dialogo
-            } else {
-                // Solo guarda, muestra confirmacion en pantalla
-                Toast.makeText(this, "Informe guardado en Documentos/GazzolaShop", Toast.LENGTH_SHORT).show();
-            }
+            // FileProvider crea un URI seguro para acceder al archivo. Obligatorio desde Android 7.
+            // Sin FileProvider Android bloquea el acceso al archivo por seguridad
+            Uri uri = FileProvider.getUriForFile(this,
+                    getPackageName() + ".fileprovider", archivo);
+
+            // Crea el Intent de compartir y abre el dialogo del sistema para que el usuario elija la app
+            Intent intentCompartir = new Intent(Intent.ACTION_SEND);
+            intentCompartir.setType("text/csv"); // indica que se comparte un CSV para que el SO sepa que apps pueden abrirlo
+            intentCompartir.putExtra(Intent.EXTRA_STREAM, uri); // adjunta el archivo al Intent usando el URI
+            intentCompartir.putExtra(Intent.EXTRA_SUBJECT, "Informe Gazzola Shop"); // asunto para cuando se comparte por email
+            intentCompartir.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION); // permiso temporal para que la app elegida pueda leer el archivo
+            startActivity(Intent.createChooser(intentCompartir, "Compartir informe")); // lanza el dialogo
 
         } catch (IOException e) {
             // avisa al usuario de que algo ha fallado al generar el archivo
             Toast.makeText(this, "Error al generar el archivo", Toast.LENGTH_SHORT).show();
         }
     }
+
 }

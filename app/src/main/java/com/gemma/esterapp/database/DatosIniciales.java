@@ -58,7 +58,7 @@ public class DatosIniciales extends RoomDatabase.Callback {
         db.execSQL("INSERT INTO subcategorias (nombre, id_categoria) VALUES ('Basuras', 2)");
 
         // ---- SUBCATEGORIAS de Vehiculos (id_categoria = 5) ----
-        // Impuestos (id=3) y Salarios (id=4)  y otros (id=6) no tienen subcategorias
+        // Impuestos (id=3) y Salarios (id=4)  y otros (id=6) no tienen subcategorias por eso no aparecen aquí.
         db.execSQL("INSERT INTO subcategorias (nombre, id_categoria) VALUES ('Gasolina', 5)");
         db.execSQL("INSERT INTO subcategorias (nombre, id_categoria) VALUES ('Seguros', 5)");
         db.execSQL("INSERT INTO subcategorias (nombre, id_categoria) VALUES ('Taller', 5)");

@@ -166,17 +166,6 @@
                 android:textSize="18sp"
                 android:minHeight="64dp"/>
 
-            <!-- Botón guardar CSV en Documentos -->
-            <Button
-                android:id="@+id/btnGuardarCSV"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Guardar"
-                android:textSize="18sp"
-                android:layout_marginTop="12dp"
-                android:minHeight="64dp"/>
-
-
         </LinearLayout>
     </ScrollView>
 
